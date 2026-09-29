@@ -18,8 +18,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(
-    title="AI Confusion Detector API",
-    description="Adaptive learning and misconception diagnosis platform for C Programming.",
+    title="KnowLens API",
+    description="Adaptive learning and misconception diagnosis platform.",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -41,7 +41,7 @@ app.include_router(router)
 @app.get("/api/health")
 def health():
     return {
-        "app": "AI Confusion Detector",
+        "app": "KnowLens",
         "tagline": "Don't just tell students the answer. Find out why they are confused.",
         "status": "online",
         "docs_url": "/docs"
@@ -72,7 +72,7 @@ else:
     @app.get("/")
     def root():
         return {
-            "app": "AI Confusion Detector",
+            "app": "KnowLens",
             "tagline": "Don't just tell students the answer. Find out why they are confused.",
             "status": "online",
             "docs_url": "/docs"

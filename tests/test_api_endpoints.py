@@ -10,10 +10,14 @@ from backend.main import app
 client = TestClient(app)
 
 def test_root_endpoint():
-    response = client.get("/")
+    # When frontend/dist exists, / serves the SPA index.html, while /api/health returns JSON
+    resp_spa = client.get("/")
+    assert resp_spa.status_code == 200
+    
+    response = client.get("/api/health")
     assert response.status_code == 200
     data = response.json()
-    assert data["app"] == "AI Confusion Detector"
+    assert data["app"] == "KnowLens"
     assert data["status"] == "online"
 
 

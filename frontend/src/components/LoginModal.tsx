@@ -77,7 +77,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         <div className="text-center space-y-2">
           <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold">
             <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-            <span>AI Confusion Detector</span>
+            <span>KnowLens</span>
           </div>
           <h2 className="text-2xl font-extrabold text-white tracking-tight">
             {isSignUp ? 'Create Student Account' : 'Student Sign In'}

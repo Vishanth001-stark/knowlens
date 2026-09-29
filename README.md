@@ -1,10 +1,10 @@
-# AI Confusion Detector
+# KnowLens — AI Confusion Detector
 
 > **"Don't just tell students the answer. Find out why they are confused."**
 
-**AI Confusion Detector** is an AI-powered diagnostic learning platform designed to detect **concept-level misunderstandings**, trace them to **prerequisite bottlenecks**, and deliver **verifiable, micro-learning recovery interventions**.
+**KnowLens** is an AI-powered diagnostic learning platform designed to detect **concept-level misunderstandings**, trace them to **prerequisite bottlenecks**, and deliver **verifiable, micro-learning recovery interventions**.
 
-Unlike conventional AI tutors or chatbots that simply output verbose answers or recite test percentages ("You got 40% in Pointers"), AI Confusion Detector diagnoses **why** a student failed, identifies whether the issue is a **misconception** or a **knowledge gap**, checks whether earlier prerequisite concepts are the real root cause, and proves whether recovery succeeded through empirical Before vs. After re-assessment.
+Unlike conventional AI tutors or chatbots that simply output verbose answers or recite test percentages ("You got 40% in Pointers"), KnowLens diagnoses **why** a student failed, identifies whether the issue is a **misconception** or a **knowledge gap**, checks whether earlier prerequisite concepts are the real root cause, and proves whether recovery succeeded through empirical Before vs. After re-assessment.
 
 ---
 

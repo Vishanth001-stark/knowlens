@@ -136,7 +136,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="space-y-3 bg-indigo-950/20 p-5 rounded-xl border border-indigo-500/30">
             <div className="text-indigo-300 font-semibold text-sm flex items-center space-x-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>AI Confusion Detector</span>
+              <span>KnowLens</span>
             </div>
             <ul className="text-xs text-slate-300 space-y-2 leading-relaxed">
               <li>• Pinpoints the exact misconception (e.g. byte arithmetic vs element scaling)</li>

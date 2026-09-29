@@ -77,7 +77,7 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
           Select a Subject to Diagnose
         </h1>
         <p className="text-base text-slate-400 max-w-3xl">
-          The AI Confusion Detector models prerequisite chains and detects whether mistakes stem from current topics or underlying prerequisite gaps.
+          KnowLens models prerequisite chains and detects whether mistakes stem from current topics or underlying prerequisite gaps.
         </p>
       </div>
 

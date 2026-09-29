@@ -417,7 +417,7 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 text-slate-500 py-6 text-xs text-center">
         <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>AI Confusion Detector — Intelligent Diagnostic Learning Platform</span>
+          <span>KnowLens — Intelligent Diagnostic Learning Platform</span>
           <span>Prerequisite DAG Tracing • Behavioral Psychometrics • Anti-Hallucination Grounding</span>
         </div>
       </footer>

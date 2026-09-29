@@ -45,7 +45,7 @@ export const EvaluationView: React.FC = () => {
             <span>Section 29 Evaluation</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            AI Confusion Detector Evaluation Benchmark
+            KnowLens Evaluation Benchmark
           </h1>
           <p className="text-sm text-slate-400 mt-1 max-w-2xl">
             Empirical benchmark assessing classification accuracy, prerequisite bottleneck tracing, and misconception discrimination precision/recall/F1.

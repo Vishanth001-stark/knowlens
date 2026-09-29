@@ -165,19 +165,19 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
         </div>
       </div>
 
-      {/* Prominent Document / PDF Upload for AI Confusion Detector */}
+      {/* Prominent Document / PDF Upload for KnowLens */}
       <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/30 shadow-xl space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="space-y-1">
             <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 text-xs font-bold uppercase tracking-wider">
               <UploadCloud className="w-3.5 h-3.5" />
-              <span>Document & PDF Confusion Scanner</span>
+              <span>KnowLens Document & PDF Scanner</span>
             </div>
             <h2 className="text-lg sm:text-xl font-extrabold text-white">
               Upload Your Study Notes or PDF to Detect Confusion
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
-              Upload lecture notes, textbook chapters, or assignments. The AI Confusion Detector will parse the text, identify concept dependencies, detect potential confusion bottlenecks, and build a targeted diagnostic.
+              Upload lecture notes, textbook chapters, or assignments. KnowLens will parse the text, identify concept dependencies, detect potential confusion bottlenecks, and build a targeted diagnostic.
             </p>
           </div>
 
