@@ -16,6 +16,7 @@ import { ProfileSettingsView } from './components/ProfileSettingsView';
 import { EvidenceModal } from './components/EvidenceModal';
 import { VerificationModal } from './components/VerificationModal';
 import { LoginModal } from './components/LoginModal';
+import { LoginPage } from './components/LoginPage';
 import { DocumentAnalysisModal } from './components/DocumentAnalysisModal';
 import { api } from './services/api';
 import {
@@ -28,20 +29,27 @@ import {
 } from './types';
 
 export function App() {
-  const [currentTab, setCurrentTab] = useState<string>('landing');
-  const [profile, setProfile] = useState<StudentProfile | null>(null);
-  const [isLoadingProfile, setIsLoadingProfile] = useState<boolean>(false);
-  const [isLoadingDemo, setIsLoadingDemo] = useState<boolean>(false);
-
   // Authentication State
   const [studentUser, setStudentUser] = useState<StudentUser | null>(() => {
     try {
       const saved = localStorage.getItem('student_user');
-      return saved ? JSON.parse(saved) : { id: 1, name: 'Vishanth R', email: 'vishanth@example.com' };
+      return saved ? JSON.parse(saved) : null;
     } catch {
-      return { id: 1, name: 'Vishanth R', email: 'vishanth@example.com' };
+      return null;
     }
   });
+
+  const [currentTab, setCurrentTab] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('student_user');
+      return saved ? 'dashboard' : 'login';
+    } catch {
+      return 'login';
+    }
+  });
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState<boolean>(false);
+  const [isLoadingDemo, setIsLoadingDemo] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
 
@@ -139,6 +147,16 @@ export function App() {
     }
   };
 
+  const handleSignOut = () => {
+    try {
+      localStorage.removeItem('student_user');
+    } catch (e) {
+      console.error(e);
+    }
+    setStudentUser(null);
+    setCurrentTab('login');
+  };
+
   const handleUploadDocument = async (file: File) => {
     const studentId = studentUser?.id || 1;
     setIsUploadingDoc(true);
@@ -233,14 +251,24 @@ export function App() {
             : activeSubjectCode.toUpperCase())
         }
         studentUser={studentUser}
-        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onOpenLogin={() => setCurrentTab('login')}
         onOpenUploadDoc={() => {
           setCurrentTab('dashboard');
         }}
+        onSignOut={handleSignOut}
       />
 
       {/* Main View Router */}
       <main className="flex-1 pb-16">
+        {currentTab === 'login' && (
+          <LoginPage
+            onGoogleLogin={handleGoogleLogin}
+            onDirectLogin={handleDirectLogin}
+            onExploreGuest={() => setCurrentTab('landing')}
+            isLoading={isLoadingAuth}
+          />
+        )}
+
         {currentTab === 'landing' && (
           <LandingPage
             onStartDiagnostic={() => {
@@ -252,7 +280,7 @@ export function App() {
             }}
             onLoadDemo={handleLoadDemo}
             isLoadingDemo={isLoadingDemo}
-            onOpenLogin={() => setIsLoginModalOpen(true)}
+            onOpenLogin={() => setCurrentTab('login')}
           />
         )}
 

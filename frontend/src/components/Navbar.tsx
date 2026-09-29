@@ -24,6 +24,7 @@ interface NavbarProps {
   studentUser: StudentUser | null;
   onOpenLogin: () => void;
   onOpenUploadDoc: () => void;
+  onSignOut?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -35,6 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   studentUser,
   onOpenLogin,
   onOpenUploadDoc,
+  onSignOut,
 }) => {
   return (
     <header className="border-b border-slate-800 bg-slate-900/95 sticky top-0 z-40 backdrop-blur">
@@ -203,19 +205,30 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Student Profile / Sign In Button */}
           {studentUser ? (
-            <button
-              onClick={onOpenLogin}
-              className="flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer"
-              title="Click to switch student or edit profile"
-            >
-              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-sm">
-                {studentUser.name.charAt(0)}
-              </div>
-              <span className="max-w-[100px] truncate hidden md:inline">{studentUser.name}</span>
-            </button>
+            <div className="flex items-center space-x-1.5">
+              <button
+                onClick={onOpenLogin}
+                className="flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer"
+                title="Click to view profile or switch account"
+              >
+                <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-sm">
+                  {studentUser.name.charAt(0)}
+                </div>
+                <span className="max-w-[100px] truncate hidden md:inline">{studentUser.name}</span>
+              </button>
+              {onSignOut && (
+                <button
+                  onClick={onSignOut}
+                  className="px-2 py-1 rounded-lg bg-slate-800/80 hover:bg-rose-950/40 text-slate-400 hover:text-rose-300 border border-slate-700 text-xs transition-colors cursor-pointer"
+                  title="Sign out of student portal"
+                >
+                  Sign Out
+                </button>
+              )}
+            </div>
           ) : (
             <button
-              onClick={onOpenLogin}
+              onClick={() => setCurrentTab('login')}
               className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 transition-all cursor-pointer"
             >
               <User className="w-3.5 h-3.5" />
