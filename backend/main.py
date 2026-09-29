@@ -33,16 +33,50 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
 app.include_router(router)
 
-@app.get("/")
-def root():
+@app.get("/api/health")
+def health():
     return {
         "app": "AI Confusion Detector",
-        "tagline": "Find what you don't understand — before you move on.",
+        "tagline": "Don't just tell students the answer. Find out why they are confused.",
         "status": "online",
         "docs_url": "/docs"
     }
+
+# Mount frontend single page application if built
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dist_dir = os.path.join(base_dir, "frontend", "dist")
+
+if os.path.exists(dist_dir):
+    assets_dir = os.path.join(dist_dir, "assets")
+    if os.path.exists(assets_dir):
+        app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    @app.get("/")
+    def serve_index():
+        return FileResponse(os.path.join(dist_dir, "index.html"))
+
+    @app.get("/{full_path:path}")
+    def serve_spa(full_path: str):
+        if full_path.startswith("api") or full_path.startswith("docs") or full_path.startswith("openapi.json"):
+            return {"detail": "Not Found"}
+        target = os.path.join(dist_dir, full_path)
+        if full_path and os.path.isfile(target):
+            return FileResponse(target)
+        return FileResponse(os.path.join(dist_dir, "index.html"))
+else:
+    @app.get("/")
+    def root():
+        return {
+            "app": "AI Confusion Detector",
+            "tagline": "Don't just tell students the answer. Find out why they are confused.",
+            "status": "online",
+            "docs_url": "/docs"
+        }
 
 if __name__ == "__main__":
     import uvicorn
