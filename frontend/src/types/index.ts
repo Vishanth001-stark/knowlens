@@ -323,3 +323,33 @@ export interface SettingsData {
     weight_prerequisite_weakness: number;
   };
 }
+
+export interface StudentUser {
+  id: number;
+  name: string;
+  email?: string;
+  avatar_url?: string;
+  auth_provider?: string;
+}
+
+export interface DocumentHotspot {
+  concept: string;
+  risk_level: 'high' | 'medium' | 'low';
+  potential_confusion: string;
+  prerequisite_bottleneck?: string;
+  remedy_suggestion: string;
+}
+
+export interface DocumentAnalysis {
+  id: number;
+  filename: string;
+  file_type: string;
+  file_size: number;
+  detected_subject: string;
+  extracted_concepts: string[];
+  confusion_hotspots: DocumentHotspot[];
+  question_count: number;
+  diagnostic_session_id?: number;
+  created_at: string;
+  generated_questions?: QuestionItem[];
+}

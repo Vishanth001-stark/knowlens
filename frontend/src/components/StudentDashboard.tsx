@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   TrendingUp,
   AlertOctagon,
@@ -11,26 +11,44 @@ import {
   ShieldAlert,
   Clock,
   Layers,
+  UploadCloud,
+  FileText,
+  CheckCircle2,
+  AlertTriangle,
 } from 'lucide-react';
-import { StudentProfile, ConceptPerformanceItem } from '../types';
+import { StudentProfile, ConceptPerformanceItem, StudentUser, DocumentAnalysis } from '../types';
 
 interface StudentDashboardProps {
   profile: StudentProfile | null;
+  studentUser: StudentUser | null;
   isLoading: boolean;
   onOpenEvidence: (conceptId: string) => void;
   onStartRecovery: (conceptId: string) => void;
   onStartDiagnostic: () => void;
   onViewConfusionMap: () => void;
+  onUploadDocument: (file: File) => void;
+  isUploadingDoc: boolean;
+  uploadedDocuments: DocumentAnalysis[];
+  onViewDocumentAnalysis: (doc: DocumentAnalysis) => void;
+  onStartDocDiagnostic: (docId: number) => void;
 }
 
 export const StudentDashboard: React.FC<StudentDashboardProps> = ({
   profile,
+  studentUser,
   isLoading,
   onOpenEvidence,
   onStartRecovery,
   onStartDiagnostic,
   onViewConfusionMap,
+  onUploadDocument,
+  isUploadingDoc,
+  uploadedDocuments,
+  onViewDocumentAnalysis,
+  onStartDocDiagnostic,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   if (isLoading || !profile) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -41,6 +59,43 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
       </div>
     );
   }
+
+  const displayName = studentUser?.name || profile.student_name || 'Vishanth';
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      onUploadDocument(e.target.files[0]);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      onUploadDocument(e.dataTransfer.files[0]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
+
+  const handleSampleUpload = (sampleType: string) => {
+    let content = '';
+    let filename = '';
+    if (sampleType === 'c_pointers') {
+      filename = 'pointers_memory_notes.txt';
+      content = `Lecture 4: C Pointers and Memory Addresses\nA pointer stores a memory address in RAM.\nWhen we dereference a pointer with *ptr, we retrieve the value at that address.\nPointer arithmetic: when you increment ptr + 1, it advances by sizeof(*ptr) bytes.\nBe careful with pointer decay when passing arrays to functions.`;
+    } else if (sampleType === 'os_deadlocks') {
+      filename = 'os_concurrency_deadlocks.txt';
+      content = `Operating Systems: Process Synchronization and Deadlocks\nA process has a separate virtual address space while threads share heap memory.\nDeadlock conditions: Mutual Exclusion, Hold and Wait, No Preemption, Circular Wait.\nDining Philosophers and Banker's Algorithm illustrate deadlock avoidance.`;
+    } else {
+      filename = 'python_mutability_scope.txt';
+      content = `Python Advanced Concepts: Object References and Scopes\nIn Python, variables are references to objects in memory.\nMutable objects like lists and dictionaries can be changed in-place.\nBeware of mutable default arguments in functions: def add_item(item, list=[]).`;
+    }
+    const blob = new Blob([content], { type: 'text/plain' });
+    const file = new File([blob], filename, { type: 'text/plain' });
+    onUploadDocument(file);
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -70,7 +125,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <span>AI Diagnostic Engine</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Good morning, Vishanth.
+            Good morning, {displayName}.
           </h1>
           <p className="text-sm text-slate-300 mt-1 font-medium">
             Here's what your learning data says.
@@ -78,11 +133,19 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
         </div>
 
         <div className="flex items-center space-x-3">
-          {/* Learning Streak Badge (Section 5) */}
+          {/* Learning Streak Badge */}
           <div className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold">
             <Flame className="w-4 h-4 text-amber-400 fill-amber-400 animate-pulse" />
             <span>5-Day Streak</span>
           </div>
+
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 flex items-center space-x-1.5 transition-colors cursor-pointer"
+          >
+            <UploadCloud className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Upload Notes</span>
+          </button>
 
           <button
             onClick={onViewConfusionMap}
@@ -100,6 +163,131 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
             <span>Start Diagnostic</span>
           </button>
         </div>
+      </div>
+
+      {/* Prominent Document / PDF Upload for AI Confusion Detector */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-indigo-950/40 via-slate-900 to-slate-900 border border-indigo-500/30 shadow-xl space-y-4">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="inline-flex items-center space-x-2 px-2.5 py-0.5 rounded-full bg-indigo-500/10 text-indigo-300 text-xs font-bold uppercase tracking-wider">
+              <UploadCloud className="w-3.5 h-3.5" />
+              <span>Document & PDF Confusion Scanner</span>
+            </div>
+            <h2 className="text-lg sm:text-xl font-extrabold text-white">
+              Upload Your Study Notes or PDF to Detect Confusion
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-300 max-w-3xl leading-relaxed">
+              Upload lecture notes, textbook chapters, or assignments. The AI Confusion Detector will parse the text, identify concept dependencies, detect potential confusion bottlenecks, and build a targeted diagnostic.
+            </p>
+          </div>
+
+          <div className="shrink-0 flex items-center space-x-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept=".pdf,.txt,.md,.c,.cpp,.py,.doc,.docx"
+              className="hidden"
+            />
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploadingDoc}
+              className="px-5 py-3 rounded-xl font-bold text-xs sm:text-sm text-white bg-indigo-600 hover:bg-indigo-500 shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 transition-all cursor-pointer disabled:opacity-50"
+            >
+              <UploadCloud className="w-4 h-4" />
+              <span>{isUploadingDoc ? 'Analyzing Document...' : 'Upload PDF or Document'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Drag and Drop Zone */}
+        <div
+          onDrop={handleDrop}
+          onDragOver={handleDragOver}
+          onClick={() => fileInputRef.current?.click()}
+          className="border-2 border-dashed border-slate-700 hover:border-indigo-500/60 rounded-xl p-5 text-center cursor-pointer bg-slate-950/40 hover:bg-slate-950/60 transition-all space-y-2 group"
+        >
+          <UploadCloud className="w-8 h-8 text-indigo-400 mx-auto group-hover:scale-110 transition-transform" />
+          <div className="text-xs font-semibold text-slate-200">
+            Drag & drop PDF, TXT, MD, or Code files here, or click to browse
+          </div>
+          <p className="text-[11px] text-slate-400">
+            Auto-detects: C Programming, Python, Operating Systems, Computer Networks, Database Systems, Math, and Data Structures
+          </p>
+        </div>
+
+        {/* Sample Document Chips */}
+        <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+          <span className="text-slate-400 font-medium">Or test with sample notes:</span>
+          <button
+            type="button"
+            onClick={() => handleSampleUpload('c_pointers')}
+            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition-colors cursor-pointer"
+          >
+            📄 C Pointers & Memory Notes
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSampleUpload('os_deadlocks')}
+            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition-colors cursor-pointer"
+          >
+            📄 OS Concurrency & Deadlocks
+          </button>
+          <button
+            type="button"
+            onClick={() => handleSampleUpload('python_mutability')}
+            className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition-colors cursor-pointer"
+          >
+            📄 Python Mutability & Scope
+          </button>
+        </div>
+
+        {/* Recently Analyzed Documents */}
+        {uploadedDocuments && uploadedDocuments.length > 0 && (
+          <div className="pt-3 border-t border-slate-800 space-y-2.5">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-300 uppercase tracking-wider">
+              <span>Your Analyzed Documents</span>
+              <span className="text-indigo-400">{uploadedDocuments.length} on file</span>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-3">
+              {uploadedDocuments.slice(0, 4).map((doc) => (
+                <div
+                  key={doc.id}
+                  className="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 flex items-center justify-between gap-3 text-xs"
+                >
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center space-x-1.5 font-bold text-slate-200 truncate">
+                      <FileText className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                      <span className="truncate">{doc.filename}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-[11px] text-slate-400">
+                      <span className="text-cyan-400">{doc.detected_subject}</span>
+                      <span>•</span>
+                      <span className="text-amber-300">{doc.confusion_hotspots.length} hotspots</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-1.5 shrink-0">
+                    <button
+                      onClick={() => onViewDocumentAnalysis(doc)}
+                      className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 cursor-pointer"
+                    >
+                      Analysis
+                    </button>
+                    <button
+                      onClick={() => onStartDocDiagnostic(doc.id)}
+                      className="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold flex items-center space-x-1 cursor-pointer"
+                    >
+                      <span>Test</span>
+                      <ArrowRight className="w-3 h-3" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Section 5 Primary Statistics Grid */}

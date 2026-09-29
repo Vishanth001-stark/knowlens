@@ -5,12 +5,14 @@ interface LandingPageProps {
   onStartDiagnostic: () => void;
   onLoadDemo: () => void;
   isLoadingDemo: boolean;
+  onOpenLogin?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onStartDiagnostic,
   onLoadDemo,
   isLoadingDemo,
+  onOpenLogin,
 }) => {
   return (
     <div className="space-y-20 py-8">
@@ -41,10 +43,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <ArrowRight className="w-4 h-4" />
           </button>
 
+          {onOpenLogin && (
+            <button
+              onClick={onOpenLogin}
+              className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 transition-all flex items-center justify-center space-x-2 text-base cursor-pointer"
+            >
+              <span>Sign In / Personalize</span>
+            </button>
+          )}
+
           <button
             onClick={onLoadDemo}
             disabled={isLoadingDemo}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-200 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700 transition-all flex items-center justify-center space-x-2 text-base disabled:opacity-50 cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-300 bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 transition-all flex items-center justify-center space-x-2 text-base disabled:opacity-50 cursor-pointer"
           >
             <Compass className="w-4 h-4 text-cyan-400" />
             <span>{isLoadingDemo ? 'Loading Demo Profile...' : 'See How It Works'}</span>
@@ -52,7 +63,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         <p className="text-xs text-slate-400 mt-4">
-          Multi-subject AI diagnostic engine (C, Python, Math, DS, OS, Networks, DB). No sign-up required.
+          Multi-subject AI diagnostic engine (C, Python, Math, DS, OS, Networks, DB). Upload notes or take assessment.
         </p>
       </section>
 

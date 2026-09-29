@@ -13,9 +13,53 @@ class StudentSchema(BaseModel):
     id: int
     name: str
     email: Optional[str]
+    avatar_url: Optional[str] = None
+    auth_provider: Optional[str] = "local"
     created_at: datetime.datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# Auth Schemas
+class LoginRequest(BaseModel):
+    email: str
+    name: Optional[str] = None
+    password: Optional[str] = None
+
+
+class GoogleLoginRequest(BaseModel):
+    email: str
+    name: str
+    avatar_url: Optional[str] = None
+    credential: Optional[str] = None
+
+
+class AuthResponse(BaseModel):
+    token: str
+    student: StudentSchema
+    is_new: bool = False
+
+
+# Document Analysis Schemas
+class DocumentHotspot(BaseModel):
+    concept: str
+    risk_level: str  # "high", "medium", "low"
+    potential_confusion: str
+    prerequisite_bottleneck: Optional[str] = None
+    remedy_suggestion: str
+
+
+class DocumentAnalysisResponse(BaseModel):
+    id: int
+    filename: str
+    file_type: str
+    file_size: int
+    detected_subject: str
+    extracted_concepts: List[str]
+    confusion_hotspots: List[DocumentHotspot]
+    question_count: int
+    diagnostic_session_id: Optional[int] = None
+    created_at: str
 
 
 # Concept & Graph schemas

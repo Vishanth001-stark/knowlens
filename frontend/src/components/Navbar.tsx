@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Brain,
   Sparkles,
@@ -11,7 +10,10 @@ import {
   ShieldCheck,
   Flame,
   Sliders,
+  UploadCloud,
+  User,
 } from 'lucide-react';
+import { StudentUser } from '../types';
 
 interface NavbarProps {
   currentTab: string;
@@ -19,6 +21,9 @@ interface NavbarProps {
   onLoadDemo: () => void;
   isLoadingDemo: boolean;
   activeSubjectName?: string;
+  studentUser: StudentUser | null;
+  onOpenLogin: () => void;
+  onOpenUploadDoc: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -27,6 +32,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLoadDemo,
   isLoadingDemo,
   activeSubjectName = 'C Programming',
+  studentUser,
+  onOpenLogin,
+  onOpenUploadDoc,
 }) => {
   return (
     <header className="border-b border-slate-800 bg-slate-900/95 sticky top-0 z-40 backdrop-blur">
@@ -162,7 +170,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Action Controls */}
-        <div className="flex items-center space-x-2.5">
+        <div className="flex items-center space-x-2">
           {/* Active Subject Badge */}
           <div
             onClick={() => setCurrentTab('subjects')}
@@ -172,6 +180,16 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="font-semibold text-slate-200">{activeSubjectName}</span>
           </div>
 
+          {/* Upload Notes Button */}
+          <button
+            onClick={onOpenUploadDoc}
+            className="hidden sm:flex items-center space-x-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/30 hover:bg-indigo-500/20 transition-all cursor-pointer"
+            title="Upload lecture notes or PDF for AI confusion scanning"
+          >
+            <UploadCloud className="w-3.5 h-3.5 text-indigo-400" />
+            <span>Upload Notes</span>
+          </button>
+
           {/* Quick Load Demo Button */}
           <button
             onClick={onLoadDemo}
@@ -180,8 +198,30 @@ export const Navbar: React.FC<NavbarProps> = ({
             title="Load synthetic student data with diagnosed pointer misconceptions"
           >
             <RotateCcw className={`w-3.5 h-3.5 ${isLoadingDemo ? 'animate-spin' : ''}`} />
-            <span>{isLoadingDemo ? 'Loading...' : 'Demo Student'}</span>
+            <span className="hidden sm:inline">{isLoadingDemo ? 'Loading...' : 'Demo Student'}</span>
           </button>
+
+          {/* Student Profile / Sign In Button */}
+          {studentUser ? (
+            <button
+              onClick={onOpenLogin}
+              className="flex items-center space-x-2 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-semibold text-white transition-all cursor-pointer"
+              title="Click to switch student or edit profile"
+            >
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-indigo-500 to-cyan-400 flex items-center justify-center text-[10px] font-bold text-white uppercase shadow-sm">
+                {studentUser.name.charAt(0)}
+              </div>
+              <span className="max-w-[100px] truncate hidden md:inline">{studentUser.name}</span>
+            </button>
+          ) : (
+            <button
+              onClick={onOpenLogin}
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 shadow-md shadow-indigo-600/30 transition-all cursor-pointer"
+            >
+              <User className="w-3.5 h-3.5" />
+              <span>Sign In</span>
+            </button>
+          )}
         </div>
       </div>
     </header>

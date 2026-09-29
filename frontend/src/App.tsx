@@ -15,14 +15,43 @@ import { EvaluationView } from './components/EvaluationView';
 import { ProfileSettingsView } from './components/ProfileSettingsView';
 import { EvidenceModal } from './components/EvidenceModal';
 import { VerificationModal } from './components/VerificationModal';
+import { LoginModal } from './components/LoginModal';
+import { DocumentAnalysisModal } from './components/DocumentAnalysisModal';
 import { api } from './services/api';
-import { StudentProfile, DiagnosticCompleteData, SubjectItem } from './types';
+import {
+  StudentProfile,
+  DiagnosticCompleteData,
+  SubjectItem,
+  StudentUser,
+  DocumentAnalysis,
+  QuestionItem,
+} from './types';
 
 export function App() {
   const [currentTab, setCurrentTab] = useState<string>('landing');
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState<boolean>(false);
   const [isLoadingDemo, setIsLoadingDemo] = useState<boolean>(false);
+
+  // Authentication State
+  const [studentUser, setStudentUser] = useState<StudentUser | null>(() => {
+    try {
+      const saved = localStorage.getItem('student_user');
+      return saved ? JSON.parse(saved) : { id: 1, name: 'Vishanth R', email: 'vishanth@example.com' };
+    } catch {
+      return { id: 1, name: 'Vishanth R', email: 'vishanth@example.com' };
+    }
+  });
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
+  const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
+
+  // Document Upload & Analysis State
+  const [uploadedDocuments, setUploadedDocuments] = useState<DocumentAnalysis[]>([]);
+  const [isUploadingDoc, setIsUploadingDoc] = useState<boolean>(false);
+  const [activeDocAnalysis, setActiveDocAnalysis] = useState<DocumentAnalysis | null>(null);
+  const [isDocModalOpen, setIsDocModalOpen] = useState<boolean>(false);
+  const [customDiagnosticSessionId, setCustomDiagnosticSessionId] = useState<number | undefined>(undefined);
+  const [customDiagnosticQuestions, setCustomDiagnosticQuestions] = useState<QuestionItem[] | undefined>(undefined);
 
   // Subject & Topic Context
   const [selectedSubject, setSelectedSubject] = useState<SubjectItem | null>(null);
@@ -36,13 +65,15 @@ export function App() {
   const [diagnosticResultsData, setDiagnosticResultsData] = useState<DiagnosticCompleteData | null>(null);
 
   useEffect(() => {
-    loadProfile();
+    const studentId = studentUser?.id || 1;
+    loadProfile(studentId);
+    loadStudentDocuments(studentId);
   }, []);
 
-  const loadProfile = async () => {
+  const loadProfile = async (studentId: number = 1) => {
     try {
       setIsLoadingProfile(true);
-      const data = await api.getStudentProfile(1);
+      const data = await api.getStudentProfile(studentId);
       setProfile(data);
     } catch (err) {
       console.error('Failed to load profile:', err);
@@ -51,11 +82,100 @@ export function App() {
     }
   };
 
+  const loadStudentDocuments = async (studentId: number) => {
+    try {
+      const docs = await api.getStudentDocuments(studentId);
+      setUploadedDocuments(docs);
+    } catch (err) {
+      console.error('Failed to load student documents:', err);
+    }
+  };
+
+  const handleDirectLogin = async (name: string, email: string) => {
+    setIsLoadingAuth(true);
+    try {
+      const res = await api.loginStudent(email, name);
+      const user: StudentUser = {
+        id: res.student.id,
+        name: res.student.name,
+        email: res.student.email,
+        avatar_url: res.student.avatar_url,
+        auth_provider: res.student.auth_provider,
+      };
+      setStudentUser(user);
+      localStorage.setItem('student_user', JSON.stringify(user));
+      await loadProfile(user.id);
+      await loadStudentDocuments(user.id);
+      setCurrentTab('dashboard');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      throw err;
+    } finally {
+      setIsLoadingAuth(false);
+    }
+  };
+
+  const handleGoogleLogin = async (name: string, email: string) => {
+    setIsLoadingAuth(true);
+    try {
+      const res = await api.googleLogin(name, email);
+      const user: StudentUser = {
+        id: res.student.id,
+        name: res.student.name,
+        email: res.student.email,
+        avatar_url: res.student.avatar_url,
+        auth_provider: res.student.auth_provider,
+      };
+      setStudentUser(user);
+      localStorage.setItem('student_user', JSON.stringify(user));
+      await loadProfile(user.id);
+      await loadStudentDocuments(user.id);
+      setCurrentTab('dashboard');
+    } catch (err: any) {
+      console.error('Google login error:', err);
+      throw err;
+    } finally {
+      setIsLoadingAuth(false);
+    }
+  };
+
+  const handleUploadDocument = async (file: File) => {
+    const studentId = studentUser?.id || 1;
+    setIsUploadingDoc(true);
+    try {
+      const doc = await api.uploadDocument(file, studentId, activeSubjectCode);
+      setActiveDocAnalysis(doc);
+      setIsDocModalOpen(true);
+      await loadStudentDocuments(studentId);
+    } catch (err: any) {
+      console.error('Upload document error:', err);
+      alert(`Failed to analyze document: ${err.message}`);
+    } finally {
+      setIsUploadingDoc(false);
+    }
+  };
+
+  const handleStartDocDiagnostic = async (docId: number) => {
+    const studentId = studentUser?.id || 1;
+    try {
+      const res = await api.startDocumentDiagnostic(docId, studentId);
+      setCustomDiagnosticSessionId(res.session_id);
+      setCustomDiagnosticQuestions(res.questions);
+      setIsDocModalOpen(false);
+      setCurrentTab('diagnostic');
+    } catch (err: any) {
+      console.error('Start doc diagnostic error:', err);
+      alert(`Failed to start diagnostic: ${err.message}`);
+    }
+  };
+
   const handleLoadDemo = async () => {
     try {
       setIsLoadingDemo(true);
       await api.loadDemoStudent();
-      await loadProfile();
+      const studentId = studentUser?.id || 1;
+      await loadProfile(studentId);
+      await loadStudentDocuments(studentId);
       setActiveSubjectCode('c_programming');
       setCurrentTab('dashboard');
     } catch (err) {
@@ -72,7 +192,7 @@ export function App() {
 
   const handleDiagnosticComplete = (data: DiagnosticCompleteData) => {
     setDiagnosticResultsData(data);
-    loadProfile();
+    loadProfile(studentUser?.id || 1);
     setCurrentTab('results');
   };
 
@@ -85,18 +205,22 @@ export function App() {
   const handleQuickStartDiagnostic = (subjectCode: string) => {
     setActiveSubjectCode(subjectCode);
     setActiveTopicName(undefined);
+    setCustomDiagnosticQuestions(undefined);
+    setCustomDiagnosticSessionId(undefined);
     setCurrentTab('diagnostic');
   };
 
   const handleStartTopicDiagnostic = (subjectCode: string, topicName: string) => {
     setActiveSubjectCode(subjectCode);
     setActiveTopicName(topicName);
+    setCustomDiagnosticQuestions(undefined);
+    setCustomDiagnosticSessionId(undefined);
     setCurrentTab('diagnostic');
   };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-indigo-500/30">
-      {/* Top Navbar with All Navigation Tabs */}
+      {/* Top Navbar */}
       <Navbar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
@@ -108,6 +232,11 @@ export function App() {
             ? 'C Programming'
             : activeSubjectCode.toUpperCase())
         }
+        studentUser={studentUser}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onOpenUploadDoc={() => {
+          setCurrentTab('dashboard');
+        }}
       />
 
       {/* Main View Router */}
@@ -117,25 +246,39 @@ export function App() {
             onStartDiagnostic={() => {
               setActiveSubjectCode('c_programming');
               setActiveTopicName(undefined);
+              setCustomDiagnosticQuestions(undefined);
+              setCustomDiagnosticSessionId(undefined);
               setCurrentTab('diagnostic');
             }}
             onLoadDemo={handleLoadDemo}
             isLoadingDemo={isLoadingDemo}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
           />
         )}
 
         {currentTab === 'dashboard' && (
           <StudentDashboard
             profile={profile}
+            studentUser={studentUser}
             isLoading={isLoadingProfile}
             onOpenEvidence={conceptId => setActiveEvidenceConceptId(conceptId)}
             onStartRecovery={handleStartRecovery}
             onStartDiagnostic={() => {
               setActiveSubjectCode('c_programming');
               setActiveTopicName(undefined);
+              setCustomDiagnosticQuestions(undefined);
+              setCustomDiagnosticSessionId(undefined);
               setCurrentTab('diagnostic');
             }}
             onViewConfusionMap={() => setCurrentTab('confusion_map')}
+            onUploadDocument={handleUploadDocument}
+            isUploadingDoc={isUploadingDoc}
+            uploadedDocuments={uploadedDocuments}
+            onViewDocumentAnalysis={(doc) => {
+              setActiveDocAnalysis(doc);
+              setIsDocModalOpen(true);
+            }}
+            onStartDocDiagnostic={handleStartDocDiagnostic}
           />
         )}
 
@@ -156,10 +299,17 @@ export function App() {
 
         {currentTab === 'diagnostic' && (
           <DiagnosticTest
+            studentId={studentUser?.id || 1}
             subjectCode={activeSubjectCode}
             topic={activeTopicName}
+            customSessionId={customDiagnosticSessionId}
+            customQuestions={customDiagnosticQuestions}
             onComplete={handleDiagnosticComplete}
-            onCancel={() => setCurrentTab('dashboard')}
+            onCancel={() => {
+              setCustomDiagnosticQuestions(undefined);
+              setCustomDiagnosticSessionId(undefined);
+              setCurrentTab('dashboard');
+            }}
           />
         )}
 
@@ -174,7 +324,7 @@ export function App() {
 
         {currentTab === 'confusion_analysis' && (
           <ConfusionAnalysis
-            studentId={1}
+            studentId={studentUser?.id || 1}
             onStartRecovery={handleStartRecovery}
             onOpenEvidence={conceptId => setActiveEvidenceConceptId(conceptId)}
             onViewConceptMap={() => setCurrentTab('confusion_map')}
@@ -197,12 +347,12 @@ export function App() {
         )}
 
         {currentTab === 'analytics' && (
-          <AnalyticsView onRefresh={loadProfile} />
+          <AnalyticsView onRefresh={() => loadProfile(studentUser?.id || 1)} />
         )}
 
         {currentTab === 'history' && (
           <LearningHistoryView
-            studentId={1}
+            studentId={studentUser?.id || 1}
             onStartRecovery={handleStartRecovery}
           />
         )}
@@ -214,10 +364,34 @@ export function App() {
         {currentTab === 'settings' && (
           <ProfileSettingsView
             profile={profile}
-            onRefreshProfile={loadProfile}
+            onRefreshProfile={() => loadProfile(studentUser?.id || 1)}
           />
         )}
       </main>
+
+      {/* Login / Auth Modal */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={() => setIsLoginModalOpen(false)}
+        onLoginSuccess={(user) => {
+          setStudentUser(user);
+          localStorage.setItem('student_user', JSON.stringify(user));
+          loadProfile(user.id);
+          loadStudentDocuments(user.id);
+          setCurrentTab('dashboard');
+        }}
+        onDirectLogin={handleDirectLogin}
+        onGoogleLogin={handleGoogleLogin}
+        isLoading={isLoadingAuth}
+      />
+
+      {/* Document Analysis Modal */}
+      <DocumentAnalysisModal
+        isOpen={isDocModalOpen}
+        onClose={() => setIsDocModalOpen(false)}
+        documentAnalysis={activeDocAnalysis}
+        onStartDiagnostic={handleStartDocDiagnostic}
+      />
 
       {/* Evidence Modal ("Why was this detected?") */}
       {activeEvidenceConceptId && (
@@ -234,7 +408,7 @@ export function App() {
           interventionId={activeVerificationInterventionId}
           onClose={() => setActiveVerificationInterventionId(null)}
           onVerified={() => {
-            loadProfile();
+            loadProfile(studentUser?.id || 1);
             setCurrentTab('dashboard');
           }}
         />

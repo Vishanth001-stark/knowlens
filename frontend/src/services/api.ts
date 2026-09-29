@@ -253,4 +253,50 @@ export const api = {
     const res = await fetch(`${BASE_URL}/student/${studentId}/history`, { method: 'DELETE' });
     return handleResponse(res);
   },
+
+  // Authentication
+  loginStudent: async (email: string, name?: string): Promise<{ token: string; student: any; is_new: boolean }> => {
+    const res = await fetch(`${BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, name }),
+    });
+    return handleResponse(res);
+  },
+
+  googleLogin: async (name: string, email: string, avatar_url?: string): Promise<{ token: string; student: any; is_new: boolean }> => {
+    const res = await fetch(`${BASE_URL}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, avatar_url }),
+    });
+    return handleResponse(res);
+  },
+
+  // Document Upload & AI Confusion Analysis
+  uploadDocument: async (file: File, studentId: number, preferredSubject?: string): Promise<any> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('student_id', studentId.toString());
+    if (preferredSubject) {
+      formData.append('preferred_subject', preferredSubject);
+    }
+    const res = await fetch(`${BASE_URL}/documents/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+    return handleResponse(res);
+  },
+
+  getStudentDocuments: async (studentId: number): Promise<any[]> => {
+    const res = await fetch(`${BASE_URL}/students/${studentId}/documents`);
+    return handleResponse(res);
+  },
+
+  startDocumentDiagnostic: async (docId: number, studentId: number): Promise<any> => {
+    const res = await fetch(`${BASE_URL}/documents/${docId}/start-diagnostic?student_id=${studentId}`, {
+      method: 'POST',
+    });
+    return handleResponse(res);
+  },
 };

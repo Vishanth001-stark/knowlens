@@ -2,13 +2,14 @@ import json
 import os
 import datetime
 from typing import List, Optional, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, File, UploadFile, Form
 from sqlalchemy.orm import Session
 
 from backend.database.database import get_db, Base, engine
 from backend.models.models import (
     Student, Subject, Concept, Prerequisite, Question, DiagnosticSession,
-    StudentResponse, ConceptPerformance, Diagnosis, Intervention, VerificationSession
+    StudentResponse, ConceptPerformance, Diagnosis, Intervention, VerificationSession,
+    UploadedDocument
 )
 from backend.schemas.schemas import (
     StudentCreate, StudentSchema, StudentProfileSummary, ConceptSchema,
@@ -20,13 +21,15 @@ from backend.schemas.schemas import (
     ConfidenceAccuracyPoint, AnalyticsHistoryItem,
     SubjectSummarySchema, TopicSummarySchema, WeakConceptItem, WeakConceptsResponse,
     StudentAnalysisResponse, LearningSessionStartRequest, LearningSessionCompleteRequest,
-    StudentProgressResponse, KnowledgeDecayItem, EvaluationRunResponse, SettingsSchema
+    StudentProgressResponse, KnowledgeDecayItem, EvaluationRunResponse, SettingsSchema,
+    LoginRequest, GoogleLoginRequest, AuthResponse, DocumentAnalysisResponse
 )
 from backend.knowledge_graph.graph import knowledge_graph
 from backend.services.confusion_engine import ConfusionEngine
 from backend.ai.llm_diagnostician import llm_diagnostician
 from backend.services.intervention_service import InterventionService
 from backend.services.verification_service import VerificationService
+from backend.services.document_service import document_service
 from backend.evaluation.evaluator import evaluator
 
 router = APIRouter(prefix="/api")
@@ -193,6 +196,161 @@ def create_student(req: StudentCreate, db: Session = Depends(get_db)):
 @router.get("/students/{id}", response_model=StudentProfileSummary)
 def get_student_by_id(id: int, db: Session = Depends(get_db)):
     return get_student_profile(id, db)
+
+
+# -------------------------------------------------------------
+# Authentication Endpoints (Login / Google Auth)
+# -------------------------------------------------------------
+@router.post("/auth/login", response_model=AuthResponse)
+def login_student(req: LoginRequest, db: Session = Depends(get_db)):
+    seed_database_if_empty(db)
+    student = db.query(Student).filter(Student.email == req.email).first()
+    is_new = False
+    if not student:
+        name = req.name if req.name and req.name.strip() else req.email.split("@")[0].replace(".", " ").title()
+        student = Student(name=name, email=req.email, auth_provider="local", created_at=utc_now())
+        db.add(student)
+        db.commit()
+        db.refresh(student)
+        is_new = True
+    elif req.name and req.name.strip():
+        student.name = req.name.strip()
+        db.commit()
+        db.refresh(student)
+
+    token = f"token_local_{student.id}_{int(datetime.datetime.now().timestamp())}"
+    return AuthResponse(token=token, student=student, is_new=is_new)
+
+
+@router.post("/auth/google", response_model=AuthResponse)
+def google_login(req: GoogleLoginRequest, db: Session = Depends(get_db)):
+    seed_database_if_empty(db)
+    student = db.query(Student).filter(Student.email == req.email).first()
+    is_new = False
+    if not student:
+        student = Student(
+            name=req.name,
+            email=req.email,
+            avatar_url=req.avatar_url,
+            auth_provider="google",
+            created_at=utc_now()
+        )
+        db.add(student)
+        db.commit()
+        db.refresh(student)
+        is_new = True
+    else:
+        if req.name:
+            student.name = req.name
+        if req.avatar_url:
+            student.avatar_url = req.avatar_url
+        student.auth_provider = "google"
+        db.commit()
+        db.refresh(student)
+
+    token = f"token_google_{student.id}_{int(datetime.datetime.now().timestamp())}"
+    return AuthResponse(token=token, student=student, is_new=is_new)
+
+
+# -------------------------------------------------------------
+# Document Upload & Intelligence Endpoints
+# -------------------------------------------------------------
+@router.post("/documents/upload", response_model=DocumentAnalysisResponse)
+async def upload_document(
+    file: UploadFile = File(...),
+    student_id: int = Form(...),
+    preferred_subject: Optional[str] = Form(None),
+    db: Session = Depends(get_db)
+):
+    seed_database_if_empty(db)
+    student = db.query(Student).filter(Student.id == student_id).first()
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+
+    analysis = document_service.analyze_document(
+        file_bytes=content,
+        filename=file.filename or "uploaded_document.pdf",
+        db=db,
+        student_id=student.id,
+        preferred_subject=preferred_subject
+    )
+
+    doc_record = db.query(UploadedDocument).filter(UploadedDocument.id == analysis["id"]).first()
+    subject = db.query(Subject).filter(Subject.name == analysis["detected_subject"]).first()
+    if not subject:
+        subject = db.query(Subject).first()
+
+    diag_session = DiagnosticSession(
+        student_id=student.id,
+        subject_id=subject.id if subject else 1,
+        topic=f"Document: {analysis['filename'][:30]}",
+        total_questions=len(analysis["generated_questions"]),
+        status="in_progress",
+        started_at=utc_now()
+    )
+    db.add(diag_session)
+    db.commit()
+    db.refresh(diag_session)
+
+    _INTERVENTION_QUESTIONS_CACHE[f"diag_doc_{diag_session.id}"] = analysis["generated_questions"]
+    analysis["diagnostic_session_id"] = diag_session.id
+    return analysis
+
+
+@router.get("/students/{id}/documents")
+def get_student_documents(id: int, db: Session = Depends(get_db)):
+    docs = db.query(UploadedDocument).filter(UploadedDocument.student_id == id).order_by(UploadedDocument.created_at.desc()).all()
+    results = []
+    for d in docs:
+        results.append({
+            "id": d.id,
+            "filename": d.filename,
+            "file_type": d.file_type,
+            "file_size": d.file_size,
+            "detected_subject": d.detected_subject,
+            "extracted_concepts": d.extracted_concepts,
+            "confusion_hotspots": d.confusion_hotspots,
+            "question_count": len(d.generated_questions) if d.generated_questions else 0,
+            "created_at": d.created_at.isoformat()
+        })
+    return results
+
+
+@router.post("/documents/{doc_id}/start-diagnostic")
+def start_document_diagnostic(doc_id: int, student_id: int = Query(...), db: Session = Depends(get_db)):
+    doc = db.query(UploadedDocument).filter(UploadedDocument.id == doc_id, UploadedDocument.student_id == student_id).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+
+    subject = db.query(Subject).filter(Subject.name == doc.detected_subject).first()
+    subject_id = subject.id if subject else 1
+
+    diag_session = DiagnosticSession(
+        student_id=student_id,
+        subject_id=subject_id,
+        topic=f"Document: {doc.filename[:30]}",
+        total_questions=len(doc.generated_questions) if doc.generated_questions else 5,
+        status="in_progress",
+        started_at=utc_now()
+    )
+    db.add(diag_session)
+    db.commit()
+    db.refresh(diag_session)
+
+    _INTERVENTION_QUESTIONS_CACHE[f"diag_doc_{diag_session.id}"] = doc.generated_questions
+
+    first_q = doc.generated_questions[0] if doc.generated_questions else None
+    return {
+        "session_id": diag_session.id,
+        "topic": diag_session.topic,
+        "total_questions": diag_session.total_questions,
+        "questions": doc.generated_questions,
+        "first_question": first_q
+    }
 
 
 # -------------------------------------------------------------

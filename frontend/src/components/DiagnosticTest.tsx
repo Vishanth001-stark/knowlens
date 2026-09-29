@@ -15,15 +15,21 @@ import { api } from '../services/api';
 import { DiagnosticSessionData, QuestionItem, AnswerResult, DiagnosticCompleteData } from '../types';
 
 interface DiagnosticTestProps {
+  studentId?: number;
   subjectCode?: string;
   topic?: string;
+  customSessionId?: number;
+  customQuestions?: QuestionItem[];
   onComplete: (data: DiagnosticCompleteData) => void;
   onCancel: () => void;
 }
 
 export const DiagnosticTest: React.FC<DiagnosticTestProps> = ({
+  studentId = 1,
   subjectCode = 'c_programming',
   topic,
+  customSessionId,
+  customQuestions,
   onComplete,
   onCancel,
 }) => {
@@ -50,13 +56,24 @@ export const DiagnosticTest: React.FC<DiagnosticTestProps> = ({
 
   useEffect(() => {
     initSession();
-  }, [subjectCode, topic]);
+  }, [subjectCode, topic, customSessionId]);
 
   const initSession = async () => {
     try {
       setIsLoading(true);
-      const data = await api.startDiagnostic(1, subjectCode, topic, 10);
-      setSession(data);
+      if (customQuestions && customQuestions.length > 0) {
+        setSession({
+          id: customSessionId || 8888,
+          student_id: studentId,
+          subject_id: 1,
+          status: 'in_progress',
+          total_questions: customQuestions.length,
+          questions: customQuestions,
+        });
+      } else {
+        const data = await api.startDiagnostic(studentId, subjectCode, topic, 10);
+        setSession(data);
+      }
       setCurrentIndex(0);
       setStartTime(Date.now());
       setElapsedSeconds(0);

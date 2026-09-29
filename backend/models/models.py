@@ -14,11 +14,15 @@ class Student(Base):
     email = Column(String(120), unique=True, index=True, nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
+    avatar_url = Column(String(255), nullable=True)
+    auth_provider = Column(String(50), default="local")
+
     responses = relationship("StudentResponse", back_populates="student", cascade="all, delete-orphan")
     performances = relationship("ConceptPerformance", back_populates="student", cascade="all, delete-orphan")
     diagnostics = relationship("DiagnosticSession", back_populates="student", cascade="all, delete-orphan")
     interventions = relationship("Intervention", back_populates="student", cascade="all, delete-orphan")
     verifications = relationship("VerificationSession", back_populates="student", cascade="all, delete-orphan")
+    documents = relationship("UploadedDocument", back_populates="student", cascade="all, delete-orphan")
 
 
 class Subject(Base):
@@ -228,3 +232,20 @@ class VerificationSession(Base):
 
     student = relationship("Student", back_populates="verifications")
     intervention = relationship("Intervention", back_populates="verifications")
+
+
+class UploadedDocument(Base):
+    __tablename__ = "uploaded_documents"
+
+    id = Column(Integer, primary_key=True, index=True)
+    student_id = Column(Integer, ForeignKey("students.id"), nullable=False)
+    filename = Column(String(255), nullable=False)
+    file_type = Column(String(50), nullable=False)
+    file_size = Column(Integer, default=0)
+    detected_subject = Column(String(100), default="C Programming")
+    extracted_concepts = Column(JSON, nullable=False)      # list of concept ids
+    confusion_hotspots = Column(JSON, nullable=False)      # list of hotspot dicts
+    generated_questions = Column(JSON, nullable=False)     # list of generated questions
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    student = relationship("Student", back_populates="documents")
