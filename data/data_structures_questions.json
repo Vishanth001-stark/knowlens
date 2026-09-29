@@ -1,0 +1,53 @@
+[
+  {
+    "id": 401,
+    "topic": "Hierarchical Structures",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "Which statement correctly defines the Binary Search Tree (BST) invariant?",
+    "code_snippet": null,
+    "options": [
+      "Every node in the left subtree must be less than the root, and every node in the right subtree must be greater.",
+      "Only the immediate left child must be less than the parent, and immediate right child greater.",
+      "The tree must be strictly balanced such that heights of subtrees differ by at most 1.",
+      "Nodes at each depth level must be sorted from left to right."
+    ],
+    "correct_answer": "Every node in the left subtree must be less than the root, and every node in the right subtree must be greater.",
+    "explanation": "The BST invariant applies to ALL nodes in the entire subtree, not merely the immediate left/right children.",
+    "concepts": [
+      "ds_bst"
+    ],
+    "prerequisites": [
+      "ds_trees"
+    ],
+    "misconception_distractors": {
+      "Only the immediate left child must be less than the parent, and immediate right child greater.": "local_parent_child_misconception_ignoring_subtree_invariant"
+    }
+  },
+  {
+    "id": 402,
+    "topic": "Associative Structures",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "What is the worst-case time complexity of searching for a key in a hash table using separate chaining if all keys hash to the exact same bucket?",
+    "code_snippet": null,
+    "options": [
+      "O(N)",
+      "O(1)",
+      "O(log N)",
+      "O(N^2)"
+    ],
+    "correct_answer": "O(N)",
+    "explanation": "If all keys collide into the same bucket, the bucket becomes a linked list of length N, degrading lookup to linear traversal O(N).",
+    "concepts": [
+      "ds_hash_tables"
+    ],
+    "prerequisites": [
+      "ds_linked_lists",
+      "ds_arrays"
+    ],
+    "misconception_distractors": {
+      "O(1)": "assuming_hash_table_lookup_is_strictly_o1_in_all_cases"
+    }
+  }
+]

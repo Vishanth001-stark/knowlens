@@ -1,0 +1,250 @@
+[
+  {
+    "id": "variables",
+    "module": "Basics",
+    "name": "Variables",
+    "difficulty_baseline": "easy",
+    "description": "Declaration, naming rules, and storage allocation for named memory locations.",
+    "prerequisites": []
+  },
+  {
+    "id": "data_types",
+    "module": "Basics",
+    "name": "Data Types",
+    "difficulty_baseline": "easy",
+    "description": "Primitive types (int, float, char, double) and their sizes, signed vs unsigned representation.",
+    "prerequisites": ["variables"]
+  },
+  {
+    "id": "constants",
+    "module": "Basics",
+    "name": "Constants",
+    "difficulty_baseline": "easy",
+    "description": "const qualifier, literal constants, and #define macros.",
+    "prerequisites": ["variables", "data_types"]
+  },
+  {
+    "id": "input_output",
+    "module": "Basics",
+    "name": "Input/Output",
+    "difficulty_baseline": "easy",
+    "description": "Standard I/O functions printf, scanf, format specifiers and input buffering.",
+    "prerequisites": ["data_types"]
+  },
+  {
+    "id": "arithmetic_ops",
+    "module": "Operators",
+    "name": "Arithmetic Operators",
+    "difficulty_baseline": "easy",
+    "description": "Binary and unary arithmetic operators (+, -, *, /, %, ++, --) and integer division behavior.",
+    "prerequisites": ["data_types"]
+  },
+  {
+    "id": "relational_ops",
+    "module": "Operators",
+    "name": "Relational Operators",
+    "difficulty_baseline": "easy",
+    "description": "Comparison operators (==, !=, <, >, <=, >=) producing 0 or 1 integer truth values.",
+    "prerequisites": ["arithmetic_ops"]
+  },
+  {
+    "id": "logical_ops",
+    "module": "Operators",
+    "name": "Logical Operators",
+    "difficulty_baseline": "easy",
+    "description": "Boolean evaluation (&&, ||, !) and short-circuit evaluation semantics.",
+    "prerequisites": ["relational_ops"]
+  },
+  {
+    "id": "bitwise_ops",
+    "module": "Operators",
+    "name": "Bitwise Operators",
+    "difficulty_baseline": "medium",
+    "description": "Bit-level manipulation (&, |, ^, ~, <<, >>) and mask operations.",
+    "prerequisites": ["arithmetic_ops", "data_types"]
+  },
+  {
+    "id": "if_else",
+    "module": "Control Flow",
+    "name": "if / else",
+    "difficulty_baseline": "easy",
+    "description": "Conditional branching, nested if statements, and dangling else conditions.",
+    "prerequisites": ["relational_ops", "logical_ops"]
+  },
+  {
+    "id": "switch_case",
+    "module": "Control Flow",
+    "name": "switch / case",
+    "difficulty_baseline": "easy",
+    "description": "Multi-way integer dispatch, case matching, break statements, and fallthrough.",
+    "prerequisites": ["if_else"]
+  },
+  {
+    "id": "for_loops",
+    "module": "Control Flow",
+    "name": "for Loops",
+    "difficulty_baseline": "medium",
+    "description": "Count-controlled iteration: init, condition, update, and loop invariants.",
+    "prerequisites": ["if_else", "arithmetic_ops"]
+  },
+  {
+    "id": "while_loops",
+    "module": "Control Flow",
+    "name": "while Loops",
+    "difficulty_baseline": "medium",
+    "description": "Pre-test condition loops, loop termination, and infinite loop prevention.",
+    "prerequisites": ["if_else"]
+  },
+  {
+    "id": "do_while",
+    "module": "Control Flow",
+    "name": "do / while",
+    "difficulty_baseline": "easy",
+    "description": "Post-test condition loops guaranteeing at least one execution iteration.",
+    "prerequisites": ["while_loops"]
+  },
+  {
+    "id": "function_parameters",
+    "module": "Functions",
+    "name": "Function Parameters",
+    "difficulty_baseline": "medium",
+    "description": "Function signatures, formal vs actual parameters, and pass-by-value evaluation.",
+    "prerequisites": ["variables", "data_types"]
+  },
+  {
+    "id": "return_values",
+    "module": "Functions",
+    "name": "Return Values",
+    "difficulty_baseline": "medium",
+    "description": "Returning values from functions, void returns, and return statement control transfer.",
+    "prerequisites": ["function_parameters"]
+  },
+  {
+    "id": "variable_scope",
+    "module": "Functions",
+    "name": "Variable Scope",
+    "difficulty_baseline": "medium",
+    "description": "Local, global, and block scopes, variable lifetime, and variable shadowing.",
+    "prerequisites": ["function_parameters", "variables"]
+  },
+  {
+    "id": "recursion",
+    "module": "Functions",
+    "name": "Recursion",
+    "difficulty_baseline": "hard",
+    "description": "Self-referential functions, base case identification, and call stack unwinding.",
+    "prerequisites": ["return_values", "variable_scope", "if_else"]
+  },
+  {
+    "id": "arrays_1d",
+    "module": "Arrays",
+    "name": "1D Arrays",
+    "difficulty_baseline": "medium",
+    "description": "Contiguous memory sequence of homogeneous elements, zero-based indexing, and bounds.",
+    "prerequisites": ["variables", "data_types"]
+  },
+  {
+    "id": "array_traversal",
+    "module": "Arrays",
+    "name": "Array Traversal",
+    "difficulty_baseline": "medium",
+    "description": "Iterating over array indices with loops, boundary checking, and element modification.",
+    "prerequisites": ["arrays_1d", "for_loops"]
+  },
+  {
+    "id": "arrays_2d",
+    "module": "Arrays",
+    "name": "2D Arrays",
+    "difficulty_baseline": "hard",
+    "description": "Row-major multidimensional contiguous allocation and nested loop indexing.",
+    "prerequisites": ["array_traversal"]
+  },
+  {
+    "id": "character_arrays",
+    "module": "Strings",
+    "name": "Character Arrays",
+    "difficulty_baseline": "medium",
+    "description": "char arrays terminated by null terminator '\\0', string literals vs mutable arrays.",
+    "prerequisites": ["arrays_1d"]
+  },
+  {
+    "id": "string_functions",
+    "module": "Strings",
+    "name": "String Functions",
+    "difficulty_baseline": "medium",
+    "description": "Standard library string utilities (strlen, strcpy, strcmp, strcat) and buffer bounds.",
+    "prerequisites": ["character_arrays"]
+  },
+  {
+    "id": "string_manipulation",
+    "module": "Strings",
+    "name": "String Manipulation",
+    "difficulty_baseline": "hard",
+    "description": "Manual string iteration, reverse, tokenization, and avoiding off-by-one terminator bugs.",
+    "prerequisites": ["string_functions", "for_loops"]
+  },
+  {
+    "id": "memory_addresses",
+    "module": "Pointers",
+    "name": "Memory Addresses",
+    "difficulty_baseline": "medium",
+    "description": "Physical/virtual memory layout, byte addressing, byte offsets, and hex address notation.",
+    "prerequisites": ["variables", "data_types"]
+  },
+  {
+    "id": "address_operator",
+    "module": "Pointers",
+    "name": "Address Operator &",
+    "difficulty_baseline": "medium",
+    "description": "Extracting the lvalue memory location with & operator and assigning to pointer variable.",
+    "prerequisites": ["memory_addresses"]
+  },
+  {
+    "id": "dereferencing",
+    "module": "Pointers",
+    "name": "Dereferencing *",
+    "difficulty_baseline": "medium",
+    "description": "Accessing and mutating value located at address held by pointer using indirection *.",
+    "prerequisites": ["address_operator"]
+  },
+  {
+    "id": "pointer_arithmetic",
+    "module": "Pointers",
+    "name": "Pointer Arithmetic",
+    "difficulty_baseline": "hard",
+    "description": "Adding/subtracting integers to pointers scaled by sizeof(type), pointer subtraction.",
+    "prerequisites": ["dereferencing", "memory_addresses", "arithmetic_ops"]
+  },
+  {
+    "id": "arrays_and_pointers",
+    "module": "Pointers",
+    "name": "Arrays and Pointers",
+    "difficulty_baseline": "hard",
+    "description": "Array name decay to pointer to first element, *(arr + i) equivalence to arr[i].",
+    "prerequisites": ["pointer_arithmetic", "arrays_1d", "dereferencing"]
+  },
+  {
+    "id": "structure_definition",
+    "module": "Structures",
+    "name": "Structure Definition",
+    "difficulty_baseline": "medium",
+    "description": "Grouping heterogeneous types with struct keyword and memory layout / padding.",
+    "prerequisites": ["data_types", "variables"]
+  },
+  {
+    "id": "structure_members",
+    "module": "Structures",
+    "name": "Structure Members",
+    "difficulty_baseline": "medium",
+    "description": "Accessing structure fields via dot operator (.), assigning and passing struct values.",
+    "prerequisites": ["structure_definition"]
+  },
+  {
+    "id": "structures_and_pointers",
+    "module": "Structures",
+    "name": "Structures and Pointers",
+    "difficulty_baseline": "hard",
+    "description": "Pointers to structs, arrow operator (->) syntax, dynamic struct allocation.",
+    "prerequisites": ["structure_members", "dereferencing"]
+  }
+]

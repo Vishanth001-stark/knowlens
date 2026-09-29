@@ -1,0 +1,81 @@
+[
+  {
+    "id": "math_functions",
+    "module": "Calculus Foundations",
+    "name": "Functions & Graphs",
+    "difficulty_baseline": "easy",
+    "description": "Function definition, domain, range, inverse functions, and graphical representation.",
+    "prerequisites": []
+  },
+  {
+    "id": "math_limits",
+    "module": "Calculus Foundations",
+    "name": "Limits & Continuity",
+    "difficulty_baseline": "medium",
+    "description": "Definition of limits, one-sided limits, indeterminate forms, and conditions for continuity.",
+    "prerequisites": [
+      "math_functions"
+    ]
+  },
+  {
+    "id": "math_derivatives",
+    "module": "Differentiation",
+    "name": "Derivatives & Rate of Change",
+    "difficulty_baseline": "medium",
+    "description": "Geometric interpretation as tangent slope, limit definition of derivative f'(x), and basic power rule.",
+    "prerequisites": [
+      "math_limits"
+    ]
+  },
+  {
+    "id": "math_chain_rule",
+    "module": "Differentiation",
+    "name": "Chain Rule",
+    "difficulty_baseline": "hard",
+    "description": "Derivative of composite functions: (f(g(x)))' = f'(g(x)) * g'(x), and multi-layer nested compositions.",
+    "prerequisites": [
+      "math_derivatives"
+    ]
+  },
+  {
+    "id": "math_integrals",
+    "module": "Integration",
+    "name": "Definite & Indefinite Integrals",
+    "difficulty_baseline": "hard",
+    "description": "Antiderivatives, Fundamental Theorem of Calculus, area under curve, and substitution method.",
+    "prerequisites": [
+      "math_derivatives",
+      "math_chain_rule"
+    ]
+  },
+  {
+    "id": "math_prob_basics",
+    "module": "Probability",
+    "name": "Sample Spaces & Basic Probability",
+    "difficulty_baseline": "easy",
+    "description": "Sample space, events, complement rule, addition rule for mutually exclusive and joint events.",
+    "prerequisites": [
+      "math_functions"
+    ]
+  },
+  {
+    "id": "math_conditional_prob",
+    "module": "Probability",
+    "name": "Conditional Probability & Independence",
+    "difficulty_baseline": "medium",
+    "description": "P(A|B) = P(A \u2229 B) / P(B), statistical independence test P(A \u2229 B) = P(A)P(B), and multiplication rule.",
+    "prerequisites": [
+      "math_prob_basics"
+    ]
+  },
+  {
+    "id": "math_bayes_theorem",
+    "module": "Probability",
+    "name": "Bayes' Theorem",
+    "difficulty_baseline": "hard",
+    "description": "Posterior probability calculation: P(A|B) = [P(B|A)P(A)] / P(B), prior probability, and total probability law.",
+    "prerequisites": [
+      "math_conditional_prob"
+    ]
+  }
+]

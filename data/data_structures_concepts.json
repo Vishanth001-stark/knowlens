@@ -1,0 +1,61 @@
+[
+  {
+    "id": "ds_arrays",
+    "module": "Linear Structures",
+    "name": "Arrays & Dynamic Arrays",
+    "difficulty_baseline": "easy",
+    "description": "Contiguous memory layout, O(1) random index access, cache locality, and geometric amortized resizing.",
+    "prerequisites": []
+  },
+  {
+    "id": "ds_linked_lists",
+    "module": "Linear Structures",
+    "name": "Singly Linked Lists",
+    "difficulty_baseline": "medium",
+    "description": "Node pointers, sequential traversal, O(1) head insertion/deletion, and pointer manipulation pitfalls.",
+    "prerequisites": [
+      "ds_arrays"
+    ]
+  },
+  {
+    "id": "ds_stacks_queues",
+    "module": "Linear Structures",
+    "name": "Stacks & Queues",
+    "difficulty_baseline": "medium",
+    "description": "LIFO vs FIFO abstract data types, circular buffer queues, and application to call stacks and BFS.",
+    "prerequisites": [
+      "ds_linked_lists"
+    ]
+  },
+  {
+    "id": "ds_trees",
+    "module": "Hierarchical Structures",
+    "name": "Binary Trees & Traversals",
+    "difficulty_baseline": "medium",
+    "description": "Root, leaf, height, depth, and recursive DFS traversals (pre-order, in-order, post-order).",
+    "prerequisites": [
+      "ds_linked_lists"
+    ]
+  },
+  {
+    "id": "ds_bst",
+    "module": "Hierarchical Structures",
+    "name": "Binary Search Trees (BST)",
+    "difficulty_baseline": "hard",
+    "description": "BST property (all keys in left subtree < root < all keys in right subtree), search, insertion, and deletion.",
+    "prerequisites": [
+      "ds_trees"
+    ]
+  },
+  {
+    "id": "ds_hash_tables",
+    "module": "Associative Structures",
+    "name": "Hash Tables & Collisions",
+    "difficulty_baseline": "hard",
+    "description": "Hash functions, load factor, separate chaining, open addressing (linear probing), and O(1) average lookup.",
+    "prerequisites": [
+      "ds_arrays",
+      "ds_linked_lists"
+    ]
+  }
+]

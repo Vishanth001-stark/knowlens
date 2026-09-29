@@ -1,0 +1,50 @@
+[
+  {
+    "id": "db_relational_model",
+    "module": "Foundations",
+    "name": "Relational Model & Keys",
+    "difficulty_baseline": "easy",
+    "description": "Tuples, attributes, candidate keys, primary keys, foreign keys, and referential integrity constraints.",
+    "prerequisites": []
+  },
+  {
+    "id": "db_sql_joins",
+    "module": "Querying",
+    "name": "SQL Joins & Aggregations",
+    "difficulty_baseline": "medium",
+    "description": "INNER JOIN, LEFT/RIGHT OUTER JOIN, FULL OUTER JOIN, GROUP BY, and WHERE vs HAVING clauses.",
+    "prerequisites": [
+      "db_relational_model"
+    ]
+  },
+  {
+    "id": "db_normalization",
+    "module": "Schema Design",
+    "name": "Normalization (1NF, 2NF, 3NF)",
+    "difficulty_baseline": "hard",
+    "description": "Functional dependencies, partial dependencies (2NF), transitive dependencies (3NF), and redundancy elimination.",
+    "prerequisites": [
+      "db_relational_model"
+    ]
+  },
+  {
+    "id": "db_transactions_acid",
+    "module": "Transaction Processing",
+    "name": "ACID Properties & Isolation",
+    "difficulty_baseline": "hard",
+    "description": "Atomicity, Consistency, Isolation, Durability, write-ahead logging (WAL), dirty reads, and isolation levels.",
+    "prerequisites": [
+      "db_relational_model"
+    ]
+  },
+  {
+    "id": "db_indexes",
+    "module": "Performance",
+    "name": "Indexes & B-Trees",
+    "difficulty_baseline": "hard",
+    "description": "Clustered vs non-clustered indexes, B+ tree node splitting, composite index prefix rule, and query execution plans.",
+    "prerequisites": [
+      "db_relational_model"
+    ]
+  }
+]

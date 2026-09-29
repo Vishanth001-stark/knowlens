@@ -1,0 +1,391 @@
+[
+  {
+    "id": 101,
+    "topic": "Basics",
+    "difficulty": "easy",
+    "question_type": "code_output",
+    "question": "What is the output of the following C code snippet?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int a = 7;\n    int b = 2;\n    printf(\"%d\", a / b);\n    return 0;\n}",
+    "options": ["3.5", "3", "4", "Compilation Error"],
+    "correct_answer": "3",
+    "explanation": "In C, integer division between two ints truncates the fractional part, resulting in integer 3.",
+    "concepts": ["arithmetic_ops"],
+    "prerequisites": ["data_types"],
+    "misconception_distractors": {
+      "3.5": "confusing_integer_division_with_floating_point",
+      "4": "incorrect_rounding_up"
+    }
+  },
+  {
+    "id": 102,
+    "topic": "Basics",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "Which of the following correctly describes what a variable represents in C?",
+    "code_snippet": null,
+    "options": [
+      "A named storage location in memory with a designated type",
+      "A permanent CPU instruction that cannot be modified",
+      "An unallocated register reserved exclusively for the compiler",
+      "A literal constant evaluated at compile-time only"
+    ],
+    "correct_answer": "A named storage location in memory with a designated type",
+    "explanation": "A variable is an identifier bound to a memory address holding a value of a specific data type.",
+    "concepts": ["variables"],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "A literal constant evaluated at compile-time only": "confusing_variable_with_constant"
+    }
+  },
+  {
+    "id": 103,
+    "topic": "Operators",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What does the following snippet print?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int x = 5;\n    int y = (x++ > 5) && (++x > 6);\n    printf(\"x=%d y=%d\", x, y);\n    return 0;\n}",
+    "options": [
+      "x=6 y=0",
+      "x=7 y=1",
+      "x=7 y=0",
+      "x=5 y=0"
+    ],
+    "correct_answer": "x=6 y=0",
+    "explanation": "Post-increment x++ evaluates to 5 in the condition (5 > 5 is false), then x becomes 6. Due to short-circuit evaluation of &&, the second expression (++x > 6) is never executed. So x remains 6, and y is 0.",
+    "concepts": ["logical_ops", "relational_ops"],
+    "prerequisites": ["arithmetic_ops"],
+    "misconception_distractors": {
+      "x=7 y=0": "missing_short_circuit_evaluation",
+      "x=7 y=1": "confusing_post_pre_increment_and_short_circuit"
+    }
+  },
+  {
+    "id": 104,
+    "topic": "Control Flow",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What is the output of the following loop?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int count = 0;\n    for (int i = 0; i < 5; i += 2) {\n        count++;\n    }\n    printf(\"%d\", count);\n    return 0;\n}",
+    "options": ["3", "2", "5", "Infinite Loop"],
+    "correct_answer": "3",
+    "explanation": "The loop runs for i = 0, i = 2, i = 4 (3 iterations). When i becomes 6, i < 5 is false.",
+    "concepts": ["for_loops"],
+    "prerequisites": ["if_else", "arithmetic_ops"],
+    "misconception_distractors": {
+      "2": "off_by_one_termination",
+      "5": "assuming_increment_by_one"
+    }
+  },
+  {
+    "id": 105,
+    "topic": "Control Flow",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What gets printed by this switch statement?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int num = 2;\n    switch(num) {\n        case 1: printf(\"A\");\n        case 2: printf(\"B\");\n        case 3: printf(\"C\");\n            break;\n        default: printf(\"D\");\n    }\n    return 0;\n}",
+    "options": ["B", "BC", "BCD", "B then break"],
+    "correct_answer": "BC",
+    "explanation": "Case 2 matches, so 'B' is printed. Because there is no break statement in case 2, execution falls through to case 3, printing 'C'. The break statement at case 3 exits the switch.",
+    "concepts": ["switch_case"],
+    "prerequisites": ["if_else"],
+    "misconception_distractors": {
+      "B": "unaware_of_switch_fallthrough",
+      "BCD": "ignoring_break_in_subsequent_case"
+    }
+  },
+  {
+    "id": 106,
+    "topic": "Functions",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What will be printed by the following code?",
+    "code_snippet": "#include <stdio.h>\nvoid modify(int x) {\n    x = x + 10;\n}\nint main() {\n    int x = 5;\n    modify(x);\n    printf(\"%d\", x);\n    return 0;\n}",
+    "options": ["5", "15", "10", "Compilation Error"],
+    "correct_answer": "5",
+    "explanation": "In C, parameters are passed by value. The function modify receives a copy of x; modifying it inside modify does not alter x in main.",
+    "concepts": ["function_parameters", "variable_scope"],
+    "prerequisites": ["variables"],
+    "misconception_distractors": {
+      "15": "confusing_pass_by_value_with_pass_by_reference",
+      "10": "confusing_local_scope_with_global"
+    }
+  },
+  {
+    "id": 107,
+    "topic": "Functions",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What is the return value of compute(3)?",
+    "code_snippet": "#include <stdio.h>\nint compute(int n) {\n    if (n <= 1) return 1;\n    return n * compute(n - 1);\n}\nint main() {\n    printf(\"%d\", compute(3));\n    return 0;\n}",
+    "options": ["6", "3", "2", "Stack Overflow"],
+    "correct_answer": "6",
+    "explanation": "compute(3) = 3 * compute(2) = 3 * (2 * compute(1)) = 3 * (2 * 1) = 6.",
+    "concepts": ["recursion", "return_values"],
+    "prerequisites": ["function_parameters", "if_else"],
+    "misconception_distractors": {
+      "3": "misunderstanding_recursive_call_unwinding",
+      "2": "missing_outer_multiplication"
+    }
+  },
+  {
+    "id": 108,
+    "topic": "Arrays",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What is printed when accessing arr[3] here?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int arr[4] = {10, 20, 30, 40};\n    printf(\"%d\", arr[3]);\n    return 0;\n}",
+    "options": ["40", "30", "Garbage value", "IndexOutOfBounds Exception"],
+    "correct_answer": "40",
+    "explanation": "Arrays in C use 0-based indexing. The indices are 0, 1, 2, 3. arr[3] is the 4th element, which is 40.",
+    "concepts": ["arrays_1d"],
+    "prerequisites": ["variables", "data_types"],
+    "misconception_distractors": {
+      "30": "confusing_0_indexed_with_1_indexed",
+      "Garbage value": "believing_size_4_has_indices_up_to_2"
+    }
+  },
+  {
+    "id": 109,
+    "topic": "Pointers",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "In C, what is the fundamental difference between variable 'x' and '&x'?",
+    "code_snippet": "int x = 42;",
+    "options": [
+      "'x' is the value stored in the variable (42), while '&x' is the hexadecimal memory address where 'x' is allocated",
+      "'x' is a pointer and '&x' dereferences it to find the integer value",
+      "'x' and '&x' are interchangeable synonyms in modern C standards",
+      "'&x' allocates a new block on heap while 'x' resides on the stack"
+    ],
+    "correct_answer": "'x' is the value stored in the variable (42), while '&x' is the hexadecimal memory address where 'x' is allocated",
+    "explanation": "'x' evaluates to the value contained within the storage cell. The address-of operator '&' returns the memory location where that cell resides.",
+    "concepts": ["memory_addresses", "address_operator"],
+    "prerequisites": ["variables"],
+    "misconception_distractors": {
+      "'x' is a pointer and '&x' dereferences it to find the integer value": "confusing_address_operator_with_dereferencing",
+      "'x' and '&x' are interchangeable synonyms in modern C standards": "confusing_address_with_value"
+    }
+  },
+  {
+    "id": 110,
+    "topic": "Pointers",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What is the output of the following code snippet?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int a = 100;\n    int *ptr = &a;\n    *ptr = 250;\n    printf(\"%d %d\", a, *ptr);\n    return 0;\n}",
+    "options": [
+      "250 250",
+      "100 250",
+      "250 100",
+      "100 100"
+    ],
+    "correct_answer": "250 250",
+    "explanation": "ptr holds the address of a. Dereferencing *ptr accesses and overwrites the memory of a with 250. Therefore, both a and *ptr evaluate to 250.",
+    "concepts": ["dereferencing", "address_operator"],
+    "prerequisites": ["memory_addresses"],
+    "misconception_distractors": {
+      "100 250": "believing_pointer_mutation_does_not_modify_original_variable",
+      "250 100": "misunderstanding_dereference_lvalue_vs_rvalue"
+    }
+  },
+  {
+    "id": 111,
+    "topic": "Pointers",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "If an integer is 4 bytes and 'ptr' holds memory address 0x1000, what is the value of 'ptr + 2'?",
+    "code_snippet": "int *ptr = (int *)0x1000;\n// What is the numerical address of (ptr + 2)?",
+    "options": [
+      "0x1008",
+      "0x1002",
+      "0x1004",
+      "0x1016"
+    ],
+    "correct_answer": "0x1008",
+    "explanation": "In C pointer arithmetic, adding integer 'n' to a pointer advances it by n * sizeof(*ptr) bytes. Since sizeof(int) is 4 bytes, ptr + 2 advances by 2 * 4 = 8 bytes, reaching address 0x1000 + 8 = 0x1008.",
+    "concepts": ["pointer_arithmetic"],
+    "prerequisites": ["memory_addresses", "dereferencing", "arithmetic_ops"],
+    "misconception_distractors": {
+      "0x1002": "treating_pointer_addition_as_raw_byte_addition",
+      "0x1004": "multiplying_by_single_byte_offset"
+    }
+  },
+  {
+    "id": 112,
+    "topic": "Pointers",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What is the output of the following pointer arithmetic snippet?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int arr[] = {10, 20, 30, 40, 50};\n    int *p = arr;\n    printf(\"%d \", *(p + 3));\n    p += 2;\n    printf(\"%d\", *p);\n    return 0;\n}",
+    "options": [
+      "40 30",
+      "30 20",
+      "40 20",
+      "13 12"
+    ],
+    "correct_answer": "40 30",
+    "explanation": "*(p + 3) accesses arr[3], which is 40. Then p += 2 moves p to point to arr[2]. So *p is 30.",
+    "concepts": ["pointer_arithmetic", "arrays_and_pointers"],
+    "prerequisites": ["dereferencing", "memory_addresses"],
+    "misconception_distractors": {
+      "30 20": "off_by_one_index_in_pointer_offset",
+      "13 12": "adding_offset_to_value_instead_of_pointer_address"
+    }
+  },
+  {
+    "id": 113,
+    "topic": "Pointers",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What is printed by this expression mixing pointer indirection and postfix increment?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int nums[] = {100, 200, 300};\n    int *ptr = nums;\n    int val = *ptr++;\n    printf(\"val=%d *ptr=%d\", val, *ptr);\n    return 0;\n}",
+    "options": [
+      "val=100 *ptr=200",
+      "val=101 *ptr=101",
+      "val=200 *ptr=200",
+      "val=100 *ptr=100"
+    ],
+    "correct_answer": "val=100 *ptr=200",
+    "explanation": "Due to operator precedence and associativity, *ptr++ evaluates as *(ptr++). It yields the dereferenced value at current ptr (100) for val, and post-increments the pointer itself to the next element (&nums[1]). Thus *ptr becomes 200.",
+    "concepts": ["pointer_arithmetic", "dereferencing"],
+    "prerequisites": ["dereferencing", "arithmetic_ops"],
+    "misconception_distractors": {
+      "val=101 *ptr=101": "confusing_incrementing_pointer_with_incrementing_pointed_value",
+      "val=200 *ptr=200": "evaluating_increment_before_dereference"
+    }
+  },
+  {
+    "id": 114,
+    "topic": "Pointers",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What does *(arr + 1) evaluate to for the array below?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int arr[3] = {5, 15, 25};\n    printf(\"%d\", *(arr + 1));\n    return 0;\n}",
+    "options": ["15", "6", "Address of arr[1]", "Compilation Error"],
+    "correct_answer": "15",
+    "explanation": "arr decays to a pointer to its first element arr[0]. (arr + 1) points to arr[1]. Dereferencing with * yields the value 15. In C, *(arr + i) is exactly identical to arr[i].",
+    "concepts": ["arrays_and_pointers"],
+    "prerequisites": ["pointer_arithmetic", "dereferencing", "arrays_1d"],
+    "misconception_distractors": {
+      "6": "adding_1_to_first_element_value_instead_of_pointer",
+      "Address of arr[1]": "missing_dereference_operator"
+    }
+  },
+  {
+    "id": 115,
+    "topic": "Strings",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What is the output of sizeof(str) vs strlen(str) for the string below?",
+    "code_snippet": "#include <stdio.h>\n#include <string.h>\nint main() {\n    char str[] = \"Hello\";\n    printf(\"%zu %zu\", sizeof(str), strlen(str));\n    return 0;\n}",
+    "options": [
+      "6 5",
+      "5 5",
+      "5 6",
+      "8 5"
+    ],
+    "correct_answer": "6 5",
+    "explanation": "The string literal \"Hello\" contains 5 characters plus a terminating null character '\\0', so the allocated array size is 6 bytes. strlen counts characters excluding '\\0', giving 5.",
+    "concepts": ["character_arrays", "string_functions"],
+    "prerequisites": ["arrays_1d"],
+    "misconception_distractors": {
+      "5 5": "forgetting_null_terminator_in_character_arrays",
+      "5 6": "confusing_sizeof_with_strlen"
+    }
+  },
+  {
+    "id": 116,
+    "topic": "Structures",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "How do you access member 'x' using a pointer to struct Point?",
+    "code_snippet": "struct Point {\n    int x;\n    int y;\n};\nstruct Point p1 = {10, 20};\nstruct Point *ptr = &p1;",
+    "options": [
+      "ptr->x or (*ptr).x",
+      "*ptr.x",
+      "ptr.x",
+      "&ptr->x"
+    ],
+    "correct_answer": "ptr->x or (*ptr).x",
+    "explanation": "The dot operator '.' has higher precedence than indirection '*'. Therefore *ptr.x would try to do *(ptr.x), which is invalid. One must write (*ptr).x or use the syntactic shorthand ptr->x.",
+    "concepts": ["structures_and_pointers", "structure_members"],
+    "prerequisites": ["structure_definition", "dereferencing"],
+    "misconception_distractors": {
+      "*ptr.x": "operator_precedence_between_dot_and_star",
+      "ptr.x": "using_dot_directly_on_pointer_instead_of_arrow"
+    }
+  },
+  {
+    "id": 117,
+    "topic": "Pointers",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "What happens when you declare an uninitialized pointer and attempt to dereference it?",
+    "code_snippet": "int *p;\n*p = 50; // What happens?",
+    "options": [
+      "Undefined behavior (likely segmentation fault / memory crash)",
+      "It automatically allocates 4 bytes of safe stack memory",
+      "The compiler initializes it to address 0x00000000 safely",
+      "The value 50 is assigned to the pointer's own address"
+    ],
+    "correct_answer": "Undefined behavior (likely segmentation fault / memory crash)",
+    "explanation": "An uninitialized local pointer contains arbitrary garbage memory address. Dereferencing it attempts to write to a random or protected memory address, causing undefined behavior or a crash.",
+    "concepts": ["dereferencing", "memory_addresses"],
+    "prerequisites": ["variables"],
+    "misconception_distractors": {
+      "It automatically allocates 4 bytes of safe stack memory": "believing_pointer_declaration_allocates_target_storage",
+      "The value 50 is assigned to the pointer's own address": "confusing_address_with_value"
+    }
+  },
+  {
+    "id": 118,
+    "topic": "Control Flow",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "How many times does the while loop print 'AGY'?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int k = 3;\n    while (k > 0) {\n        printf(\"AGY \");\n        k--;\n    }\n    return 0;\n}",
+    "options": ["3 times", "4 times", "2 times", "Infinite loop"],
+    "correct_answer": "3 times",
+    "explanation": "k starts at 3. Iteration 1: k=3 (>0, prints, k becomes 2). Iteration 2: k=2 (>0, prints, k becomes 1). Iteration 3: k=1 (>0, prints, k becomes 0). Loop ends when k=0.",
+    "concepts": ["while_loops"],
+    "prerequisites": ["if_else"],
+    "misconception_distractors": {
+      "4 times": "off_by_one_termination_inclusive_zero",
+      "2 times": "evaluating_post_decrement_prematurely"
+    }
+  },
+  {
+    "id": 119,
+    "topic": "Arrays",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What is the value of matrix[1][2] in the 2D array below?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int matrix[2][3] = {\n        {1, 2, 3},\n        {4, 5, 6}\n    };\n    printf(\"%d\", matrix[1][2]);\n    return 0;\n}",
+    "options": ["6", "5", "3", "2"],
+    "correct_answer": "6",
+    "explanation": "matrix[1][2] refers to row index 1 (second row: {4, 5, 6}) and column index 2 (third element: 6).",
+    "concepts": ["arrays_2d", "array_traversal"],
+    "prerequisites": ["arrays_1d"],
+    "misconception_distractors": {
+      "5": "confusing_row_column_zero_indexing",
+      "3": "transposing_row_and_column"
+    }
+  },
+  {
+    "id": 120,
+    "topic": "Operators",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What is the value of (a & b) when a = 5 and b = 3?",
+    "code_snippet": "#include <stdio.h>\nint main() {\n    int a = 5; // binary 0101\n    int b = 3; // binary 0011\n    printf(\"%d\", a & b);\n    return 0;\n}",
+    "options": ["1", "7", "0", "8"],
+    "correct_answer": "1",
+    "explanation": "Bitwise AND: 0101 & 0011 = 0001 in binary, which equals decimal 1.",
+    "concepts": ["bitwise_ops"],
+    "prerequisites": ["arithmetic_ops", "data_types"],
+    "misconception_distractors": {
+      "7": "confusing_bitwise_AND_with_bitwise_OR",
+      "0": "confusing_bitwise_AND_with_logical_condition"
+    }
+  }
+]

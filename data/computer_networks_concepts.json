@@ -1,0 +1,61 @@
+[
+  {
+    "id": "cn_osi_model",
+    "module": "Architecture",
+    "name": "OSI & TCP/IP Layering",
+    "difficulty_baseline": "easy",
+    "description": "Layer responsibilities (Physical to Application), protocol encapsulation, headers, and payload traversal.",
+    "prerequisites": []
+  },
+  {
+    "id": "cn_ip_addressing",
+    "module": "Network Layer",
+    "name": "IP Addressing & Subnetting",
+    "difficulty_baseline": "medium",
+    "description": "IPv4 format, CIDR notation (/24), subnet masks, network address vs broadcast address calculation.",
+    "prerequisites": [
+      "cn_osi_model"
+    ]
+  },
+  {
+    "id": "cn_tcp_udp",
+    "module": "Transport Layer",
+    "name": "TCP vs UDP Fundamentals",
+    "difficulty_baseline": "medium",
+    "description": "Connection-oriented vs connectionless, reliability, port numbers, checksums, and latency tradeoffs.",
+    "prerequisites": [
+      "cn_osi_model"
+    ]
+  },
+  {
+    "id": "cn_three_way_handshake",
+    "module": "Transport Layer",
+    "name": "TCP 3-Way Handshake",
+    "difficulty_baseline": "hard",
+    "description": "SYN, SYN-ACK, ACK sequence exchange, initial sequence number (ISN) negotiation, and connection teardown.",
+    "prerequisites": [
+      "cn_tcp_udp"
+    ]
+  },
+  {
+    "id": "cn_flow_congestion",
+    "module": "Transport Layer",
+    "name": "Flow Control vs Congestion Control",
+    "difficulty_baseline": "hard",
+    "description": "Receiver sliding window (flow control) vs network bandwidth management (slow start, AIMD congestion control).",
+    "prerequisites": [
+      "cn_tcp_udp",
+      "cn_three_way_handshake"
+    ]
+  },
+  {
+    "id": "cn_dns_http",
+    "module": "Application Layer",
+    "name": "DNS & HTTP/HTTPS",
+    "difficulty_baseline": "medium",
+    "description": "Hierarchical domain name resolution, DNS record types (A, CNAME), HTTP methods, status codes, and TLS.",
+    "prerequisites": [
+      "cn_tcp_udp"
+    ]
+  }
+]

@@ -1,0 +1,131 @@
+[
+  {
+    "id": 201,
+    "topic": "Memory Model",
+    "difficulty": "medium",
+    "question_type": "code_output",
+    "question": "What is the output of the following Python code?",
+    "code_snippet": "a = [1, 2, 3]\nb = a\nb.append(4)\nprint(len(a))",
+    "options": [
+      "3",
+      "4",
+      "Error",
+      "[1, 2, 3, 4]"
+    ],
+    "correct_answer": "4",
+    "explanation": "In Python, variable assignment `b = a` copies the object reference, not the list itself. Modifying `b` mutates the same list that `a` references.",
+    "concepts": [
+      "py_mutability",
+      "py_lists"
+    ],
+    "prerequisites": [
+      "py_variables"
+    ],
+    "misconception_distractors": {
+      "3": "believing_assignment_creates_an_independent_copy"
+    }
+  },
+  {
+    "id": 202,
+    "topic": "Functions",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What does the following function call sequence print?",
+    "code_snippet": "def append_to(element, target=[]):\n    target.append(element)\n    return target\n\nprint(append_to(1))\nprint(append_to(2))",
+    "options": [
+      "[1] then [2]",
+      "[1] then [1, 2]",
+      "[1] then []",
+      "TypeError"
+    ],
+    "correct_answer": "[1] then [1, 2]",
+    "explanation": "Default arguments are evaluated once when the function is defined, not each time it is called. The same mutable list `target` is reused across calls.",
+    "concepts": [
+      "py_default_args"
+    ],
+    "prerequisites": [
+      "py_mutability",
+      "py_functions"
+    ],
+    "misconception_distractors": {
+      "[1] then [2]": "assuming_default_arguments_are_reinstantiated_per_call"
+    }
+  },
+  {
+    "id": 203,
+    "topic": "Scope",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What happens when executing this code?",
+    "code_snippet": "x = 10\ndef foo():\n    print(x)\n    x = 20\n\nfoo()",
+    "options": [
+      "Prints 10",
+      "UnboundLocalError",
+      "Prints 20",
+      "NameError: name 'x' is not defined"
+    ],
+    "correct_answer": "UnboundLocalError",
+    "explanation": "Because `x` is assigned inside `foo()`, Python marks `x` as a local variable for the entire scope of `foo()`. Accessing it before assignment raises UnboundLocalError.",
+    "concepts": [
+      "py_scope_legb"
+    ],
+    "prerequisites": [
+      "py_variables",
+      "py_functions"
+    ],
+    "misconception_distractors": {
+      "Prints 10": "assuming_python_falls_back_to_global_before_local_assignment"
+    }
+  },
+  {
+    "id": 204,
+    "topic": "Advanced Functions",
+    "difficulty": "hard",
+    "question_type": "code_output",
+    "question": "What is the result of calling the functions produced by this list comprehension?",
+    "code_snippet": "funcs = [lambda: i for i in range(3)]\nprint([f() for f in funcs])",
+    "options": [
+      "[0, 1, 2]",
+      "[2, 2, 2]",
+      "[0, 0, 0]",
+      "TypeError"
+    ],
+    "correct_answer": "[2, 2, 2]",
+    "explanation": "Closures in Python bind variables by reference (late binding). When the lambdas are executed, `i` has completed the loop and holds the final value 2.",
+    "concepts": [
+      "py_closures"
+    ],
+    "prerequisites": [
+      "py_scope_legb"
+    ],
+    "misconception_distractors": {
+      "[0, 1, 2]": "assuming_loop_variable_is_captured_by_value_at_creation_time"
+    }
+  },
+  {
+    "id": 205,
+    "topic": "OOP",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "What happens when you modify a mutable class-level attribute through an instance in Python?",
+    "code_snippet": "class Dog:\n    tricks = []\n\nd1 = Dog()\nd2 = Dog()\nd1.tricks.append('roll')\nprint(d2.tricks)",
+    "options": [
+      "['roll']",
+      "[]",
+      "AttributeError",
+      "None"
+    ],
+    "correct_answer": "['roll']",
+    "explanation": "`tricks` is defined on the class object. Accessing `d1.tricks` retrieves the class attribute list and mutates it in place, reflecting on `d2.tricks`.",
+    "concepts": [
+      "py_classes"
+    ],
+    "prerequisites": [
+      "py_mutability",
+      "py_variables"
+    ],
+    "misconception_distractors": {
+      "[]": "confusing_class_attributes_with_isolated_instance_attributes"
+    }
+  }
+]

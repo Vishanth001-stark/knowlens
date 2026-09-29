@@ -1,0 +1,50 @@
+[
+  {
+    "id": 601,
+    "topic": "Concurrency",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "Which of the following is SHARED among all threads within the same process?",
+    "code_snippet": null,
+    "options": [
+      "Heap memory and open file descriptors",
+      "Stack memory and registers",
+      "Thread local storage and program counter",
+      "Process ID (PID) and call stack frames"
+    ],
+    "correct_answer": "Heap memory and open file descriptors",
+    "explanation": "Threads share process address space including code, data, heap, and open OS resources. Each thread maintains its own unique call stack and CPU register state.",
+    "concepts": [
+      "os_processes_threads"
+    ],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "Stack memory and registers": "confusing_shared_heap_with_thread_isolated_stack"
+    }
+  },
+  {
+    "id": 602,
+    "topic": "Concurrency",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "To prevent a deadlock from occurring, which of the following is sufficient according to the Coffman conditions?",
+    "code_snippet": null,
+    "options": [
+      "Eliminate at least ONE of the four Coffman conditions.",
+      "Eliminate ALL four Coffman conditions simultaneously.",
+      "Ensure CPU utilization remains below 80%.",
+      "Assign every process an equal scheduling priority."
+    ],
+    "correct_answer": "Eliminate at least ONE of the four Coffman conditions.",
+    "explanation": "All four Coffman conditions must hold simultaneously for a deadlock to exist. Breaking any single condition guarantees deadlock prevention.",
+    "concepts": [
+      "os_deadlocks"
+    ],
+    "prerequisites": [
+      "os_synchronization"
+    ],
+    "misconception_distractors": {
+      "Eliminate ALL four Coffman conditions simultaneously.": "believing_all_deadlock_conditions_must_be_broken_simultaneously"
+    }
+  }
+]

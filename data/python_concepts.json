@@ -1,0 +1,124 @@
+[
+  {
+    "id": "py_variables",
+    "module": "Basics",
+    "name": "Variables & References",
+    "difficulty_baseline": "easy",
+    "description": "Python variables as names referring to objects, id(), and identity vs equality (is vs ==).",
+    "prerequisites": []
+  },
+  {
+    "id": "py_data_types",
+    "module": "Basics",
+    "name": "Data Types",
+    "difficulty_baseline": "easy",
+    "description": "Built-in types (int, float, str, bool) and dynamic typing rules.",
+    "prerequisites": [
+      "py_variables"
+    ]
+  },
+  {
+    "id": "py_mutability",
+    "module": "Memory Model",
+    "name": "Mutability & Immutability",
+    "difficulty_baseline": "medium",
+    "description": "Differences between mutable (list, dict, set) and immutable (int, str, tuple) objects in memory.",
+    "prerequisites": [
+      "py_variables",
+      "py_data_types"
+    ]
+  },
+  {
+    "id": "py_lists",
+    "module": "Collections",
+    "name": "Lists & Slicing",
+    "difficulty_baseline": "easy",
+    "description": "List operations, indexing, negative indexing, step slicing, and in-place modifications.",
+    "prerequisites": [
+      "py_mutability"
+    ]
+  },
+  {
+    "id": "py_dicts",
+    "module": "Collections",
+    "name": "Dictionaries & Sets",
+    "difficulty_baseline": "medium",
+    "description": "Key-value mapping, hashability requirement for keys, set uniqueness, and dictionary comprehension.",
+    "prerequisites": [
+      "py_mutability"
+    ]
+  },
+  {
+    "id": "py_control_flow",
+    "module": "Control Flow",
+    "name": "Control Flow & Loops",
+    "difficulty_baseline": "easy",
+    "description": "if/elif/else statements, for-in loops, while loops, break, continue, and for-else clauses.",
+    "prerequisites": [
+      "py_data_types"
+    ]
+  },
+  {
+    "id": "py_functions",
+    "module": "Functions",
+    "name": "Functions & Arguments",
+    "difficulty_baseline": "medium",
+    "description": "def syntax, positional vs keyword arguments, *args and **kwargs unpacking.",
+    "prerequisites": [
+      "py_control_flow",
+      "py_variables"
+    ]
+  },
+  {
+    "id": "py_default_args",
+    "module": "Functions",
+    "name": "Default Arguments & Mutability Trap",
+    "difficulty_baseline": "hard",
+    "description": "Evaluation of default arguments at function definition time and the mutable default argument pitfall.",
+    "prerequisites": [
+      "py_functions",
+      "py_mutability"
+    ]
+  },
+  {
+    "id": "py_scope_legb",
+    "module": "Scope",
+    "name": "Scope & LEGB Rule",
+    "difficulty_baseline": "hard",
+    "description": "Local, Enclosing, Global, Built-in scope resolution, global and nonlocal keywords, UnboundLocalError.",
+    "prerequisites": [
+      "py_functions"
+    ]
+  },
+  {
+    "id": "py_closures",
+    "module": "Advanced Functions",
+    "name": "Closures & Late Binding",
+    "difficulty_baseline": "hard",
+    "description": "Functions enclosing outer non-global variables, late binding behavior in closures and loops.",
+    "prerequisites": [
+      "py_scope_legb"
+    ]
+  },
+  {
+    "id": "py_classes",
+    "module": "OOP",
+    "name": "Classes & Self",
+    "difficulty_baseline": "medium",
+    "description": "Class definitions, __init__ constructor, instance attributes vs class attributes, self parameter.",
+    "prerequisites": [
+      "py_functions",
+      "py_scope_legb"
+    ]
+  },
+  {
+    "id": "py_inheritance",
+    "module": "OOP",
+    "name": "Inheritance & super()",
+    "difficulty_baseline": "hard",
+    "description": "Single and multiple inheritance, method overriding, super() call and Method Resolution Order (MRO).",
+    "prerequisites": [
+      "py_classes"
+    ]
+  }
+]

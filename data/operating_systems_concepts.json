@@ -1,0 +1,50 @@
+[
+  {
+    "id": "os_processes_threads",
+    "module": "Concurrency",
+    "name": "Processes vs Threads",
+    "difficulty_baseline": "medium",
+    "description": "Address space isolation, Process Control Block (PCB), thread stack vs shared heap, and context switch costs.",
+    "prerequisites": []
+  },
+  {
+    "id": "os_cpu_scheduling",
+    "module": "Process Management",
+    "name": "CPU Scheduling Algorithms",
+    "difficulty_baseline": "medium",
+    "description": "Preemptive vs non-preemptive scheduling, Round Robin, SJF, multi-level feedback queues, turnaround & waiting times.",
+    "prerequisites": [
+      "os_processes_threads"
+    ]
+  },
+  {
+    "id": "os_synchronization",
+    "module": "Concurrency",
+    "name": "Race Conditions & Mutexes",
+    "difficulty_baseline": "hard",
+    "description": "Critical section problem, atomic instructions (TestAndSet), mutual exclusion, semaphores, and condition variables.",
+    "prerequisites": [
+      "os_processes_threads"
+    ]
+  },
+  {
+    "id": "os_deadlocks",
+    "module": "Concurrency",
+    "name": "Deadlocks & Coffman Conditions",
+    "difficulty_baseline": "hard",
+    "description": "Mutual exclusion, hold and wait, no preemption, circular wait, resource allocation graphs, and Banker's algorithm.",
+    "prerequisites": [
+      "os_synchronization"
+    ]
+  },
+  {
+    "id": "os_virtual_memory",
+    "module": "Memory Management",
+    "name": "Virtual Memory & Paging",
+    "difficulty_baseline": "hard",
+    "description": "Virtual vs physical address translation, MMU, Page Tables, TLB cache, page faults, and replacement policies (LRU).",
+    "prerequisites": [
+      "os_processes_threads"
+    ]
+  }
+]

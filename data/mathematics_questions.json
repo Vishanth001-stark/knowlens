@@ -1,0 +1,52 @@
+[
+  {
+    "id": 301,
+    "topic": "Differentiation",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "What is the derivative of f(x) = (3x^2 + 5)^4 with respect to x?",
+    "code_snippet": null,
+    "options": [
+      "4(3x^2 + 5)^3 * 6x",
+      "4(3x^2 + 5)^3",
+      "12x(3x^2 + 5)^3",
+      "24x(3x^2 + 5)^4"
+    ],
+    "correct_answer": "4(3x^2 + 5)^3 * 6x",
+    "explanation": "By the chain rule, d/dx[g(x)^4] = 4*g(x)^3 * g'(x). Here g(x) = 3x^2 + 5, so g'(x) = 6x, yielding 24x(3x^2 + 5)^3 = 4(3x^2 + 5)^3 * 6x.",
+    "concepts": [
+      "math_chain_rule"
+    ],
+    "prerequisites": [
+      "math_derivatives"
+    ],
+    "misconception_distractors": {
+      "4(3x^2 + 5)^3": "forgetting_inner_derivative_in_chain_rule"
+    }
+  },
+  {
+    "id": 302,
+    "topic": "Probability",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "A medical test for a disease with a 1% prevalence rate has a 95% true positive rate and a 5% false positive rate. If a randomly selected person tests positive, what is the probability they actually have the disease?",
+    "code_snippet": null,
+    "options": [
+      "Approximately 16%",
+      "95%",
+      "90%",
+      "Approximately 50%"
+    ],
+    "correct_answer": "Approximately 16%",
+    "explanation": "By Bayes' theorem: P(D|+) = [P(+|D)*P(D)] / [P(+|D)*P(D) + P(+|no D)*P(no D)] = [0.95 * 0.01] / [0.95 * 0.01 + 0.05 * 0.99] = 0.0095 / (0.0095 + 0.0495) \u2248 16.1%.",
+    "concepts": [
+      "math_bayes_theorem"
+    ],
+    "prerequisites": [
+      "math_conditional_prob"
+    ],
+    "misconception_distractors": {
+      "95%": "base_rate_fallacy_confusing_p_pos_given_disease_with_p_disease_given_pos"
+    }
+  }
+]
