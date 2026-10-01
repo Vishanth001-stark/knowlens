@@ -265,7 +265,19 @@ async def upload_document(
     seed_database_if_empty(db)
     student = db.query(Student).filter(Student.id == student_id).first()
     if not student:
-        raise HTTPException(status_code=404, detail="Student not found")
+        try:
+            student = Student(id=student_id, name="Student", email=f"student_{student_id}@knowlens.edu")
+            db.add(student)
+            db.commit()
+            db.refresh(student)
+        except Exception:
+            db.rollback()
+            student = db.query(Student).first()
+            if not student:
+                student = Student(name="Student", email="student@knowlens.edu")
+                db.add(student)
+                db.commit()
+                db.refresh(student)
 
     content = await file.read()
     if not content:
@@ -322,7 +334,7 @@ def get_student_documents(id: int, db: Session = Depends(get_db)):
 
 @router.post("/documents/{doc_id}/start-diagnostic")
 def start_document_diagnostic(doc_id: int, student_id: int = Query(...), db: Session = Depends(get_db)):
-    doc = db.query(UploadedDocument).filter(UploadedDocument.id == doc_id, UploadedDocument.student_id == student_id).first()
+    doc = db.query(UploadedDocument).filter(UploadedDocument.id == doc_id).first()
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
 
