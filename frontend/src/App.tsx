@@ -49,7 +49,6 @@ export function App() {
   });
   const [profile, setProfile] = useState<StudentProfile | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState<boolean>(false);
-  const [isLoadingDemo, setIsLoadingDemo] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(false);
 
@@ -187,21 +186,6 @@ export function App() {
     }
   };
 
-  const handleLoadDemo = async () => {
-    try {
-      setIsLoadingDemo(true);
-      await api.loadDemoStudent();
-      const studentId = studentUser?.id || 1;
-      await loadProfile(studentId);
-      await loadStudentDocuments(studentId);
-      setActiveSubjectCode('c_programming');
-      setCurrentTab('dashboard');
-    } catch (err) {
-      console.error('Failed to load demo:', err);
-    } finally {
-      setIsLoadingDemo(false);
-    }
-  };
 
   const handleStartRecovery = (conceptId: string) => {
     setActiveInterventionConceptId(conceptId);
@@ -242,8 +226,6 @@ export function App() {
       <Navbar
         currentTab={currentTab}
         setCurrentTab={setCurrentTab}
-        onLoadDemo={handleLoadDemo}
-        isLoadingDemo={isLoadingDemo}
         activeSubjectName={
           selectedSubject?.name ||
           (activeSubjectCode === 'c_programming'
@@ -278,8 +260,6 @@ export function App() {
               setCustomDiagnosticSessionId(undefined);
               setCurrentTab('diagnostic');
             }}
-            onLoadDemo={handleLoadDemo}
-            isLoadingDemo={isLoadingDemo}
             onOpenLogin={() => setCurrentTab('login')}
           />
         )}

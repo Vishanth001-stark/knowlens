@@ -818,6 +818,12 @@ def get_student_profile(id: int, db: Session = Depends(get_db)):
                 "status": a_perf.status if a_perf else "DEVELOPING"
             })
 
+    recent_verifications = db.query(VerificationSession).filter(VerificationSession.student_id == student.id).all()
+    recent_improvement = (
+        round(sum(v.improvement_delta for v in recent_verifications) / len(recent_verifications), 1)
+        if recent_verifications else 0.0
+    )
+
     if weak_schemas:
         top_weak = weak_schemas[0]
         rec_step = {
@@ -828,10 +834,10 @@ def get_student_profile(id: int, db: Session = Depends(get_db)):
         }
     else:
         rec_step = {
-            "concept_id": "pointer_arithmetic",
-            "concept_name": "Pointer Arithmetic",
+            "concept_id": "",
+            "concept_name": "Diagnostic Assessment",
             "action": "Take Diagnostic",
-            "reason": "Identify any hidden conceptual gaps before advancing."
+            "reason": "Complete a diagnostic assessment or upload study notes to diagnose your concept mastery."
         }
 
     return StudentProfileSummary(
@@ -843,7 +849,7 @@ def get_student_profile(id: int, db: Session = Depends(get_db)):
         concepts_developing=developing,
         concepts_at_risk=at_risk,
         concepts_confused=confused,
-        recent_improvement=8.5,
+        recent_improvement=recent_improvement,
         critical_prerequisites=crit_prereqs[:3],
         weak_concepts=weak_schemas,
         recommended_next_step=rec_step

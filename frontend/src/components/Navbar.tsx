@@ -18,8 +18,6 @@ import { StudentUser } from '../types';
 interface NavbarProps {
   currentTab: string;
   setCurrentTab: (tab: string) => void;
-  onLoadDemo: () => void;
-  isLoadingDemo: boolean;
   activeSubjectName?: string;
   studentUser: StudentUser | null;
   onOpenLogin: () => void;
@@ -30,8 +28,6 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   currentTab,
   setCurrentTab,
-  onLoadDemo,
-  isLoadingDemo,
   activeSubjectName = 'C Programming',
   studentUser,
   onOpenLogin,
@@ -190,17 +186,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <UploadCloud className="w-3.5 h-3.5 text-indigo-400" />
             <span>Upload Notes</span>
-          </button>
-
-          {/* Quick Load Demo Button */}
-          <button
-            onClick={onLoadDemo}
-            disabled={isLoadingDemo}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 hover:bg-cyan-500/20 transition-all disabled:opacity-50 cursor-pointer"
-            title="Load synthetic student data with diagnosed pointer misconceptions"
-          >
-            <RotateCcw className={`w-3.5 h-3.5 ${isLoadingDemo ? 'animate-spin' : ''}`} />
-            <span className="hidden sm:inline">{isLoadingDemo ? 'Loading...' : 'Demo Student'}</span>
           </button>
 
           {/* Student Profile / Sign In Button */}

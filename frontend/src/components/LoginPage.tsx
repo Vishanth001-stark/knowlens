@@ -109,10 +109,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     }
   };
 
-  const handlePreset = (presetName: string, presetEmail: string) => {
-    setName(presetName);
-    setEmail(presetEmail);
-  };
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center py-10 px-4">
@@ -193,7 +189,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Alex Morgan"
+                  placeholder="Your full name"
                   required
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
@@ -210,7 +206,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. alex.morgan@gmail.com"
+                  placeholder="you@example.com"
                   required
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
@@ -227,33 +223,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </button>
           </form>
 
-          {/* Quick Demo Personas */}
-          <div className="pt-2 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
-            <span>Demo Personas:</span>
-            <div className="flex flex-wrap gap-1.5">
-              <button
-                type="button"
-                onClick={() => handlePreset('Alex Morgan', 'alex.morgan@stanford.edu')}
-                className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-indigo-300 border border-slate-700/80 transition-colors cursor-pointer"
-              >
-                Alex Morgan
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePreset('Sophia Chen', 'sophia.chen@mit.edu')}
-                className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-cyan-300 border border-slate-700/80 transition-colors cursor-pointer"
-              >
-                Sophia Chen
-              </button>
-              <button
-                type="button"
-                onClick={() => handlePreset('David Kumar', 'david.kumar@berkeley.edu')}
-                className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-purple-300 border border-slate-700/80 transition-colors cursor-pointer"
-              >
-                David Kumar
-              </button>
-            </div>
-          </div>
         </div>
 
         {/* Guest / Explore Alternative */}
@@ -264,7 +233,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             className="text-xs text-slate-400 hover:text-indigo-300 font-medium inline-flex items-center space-x-1.5 transition-colors cursor-pointer"
           >
             <Compass className="w-3.5 h-3.5" />
-            <span>Or explore course catalog and demo without signing in</span>
+            <span>Or explore course catalog as guest</span>
           </button>
         </div>
 

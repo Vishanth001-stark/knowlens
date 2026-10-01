@@ -3,17 +3,20 @@ import { ArrowRight, CheckCircle2, AlertTriangle, ShieldCheck, Cpu, GitFork, Com
 
 interface LandingPageProps {
   onStartDiagnostic: () => void;
-  onLoadDemo: () => void;
-  isLoadingDemo: boolean;
   onOpenLogin?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   onStartDiagnostic,
-  onLoadDemo,
-  isLoadingDemo,
   onOpenLogin,
 }) => {
+  const handleScrollToFeatures = () => {
+    const el = document.getElementById('features');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="space-y-20 py-8">
       {/* Hero Section */}
@@ -53,12 +56,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           )}
 
           <button
-            onClick={onLoadDemo}
-            disabled={isLoadingDemo}
-            className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-300 bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 transition-all flex items-center justify-center space-x-2 text-base disabled:opacity-50 cursor-pointer"
+            onClick={handleScrollToFeatures}
+            className="w-full sm:w-auto px-7 py-3.5 rounded-xl font-semibold text-slate-300 bg-slate-900/80 hover:bg-slate-800/80 border border-slate-800 transition-all flex items-center justify-center space-x-2 text-base cursor-pointer"
           >
             <Compass className="w-4 h-4 text-cyan-400" />
-            <span>{isLoadingDemo ? 'Loading Demo Profile...' : 'See How It Works'}</span>
+            <span>See How It Works</span>
           </button>
         </div>
 
@@ -68,7 +70,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* 4 Feature Cards (Section 4 Requirement) */}
-      <section className="max-w-6xl mx-auto px-4">
+      <section id="features" className="max-w-6xl mx-auto px-4 scroll-mt-20">
         <div className="text-center mb-8">
           <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400">Core Diagnostic Features</h2>
           <p className="text-2xl font-bold text-white mt-1">Don't just answer questions. Find out why you're confused.</p>

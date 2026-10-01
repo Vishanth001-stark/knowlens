@@ -61,11 +61,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     }
   };
 
-  const handleQuickPreset = (presetName: string, presetEmail: string) => {
-    setName(presetName);
-    setEmail(presetEmail);
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
       <div className="relative w-full max-w-md rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl p-6 sm:p-8 space-y-6">
@@ -147,7 +142,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Alex Morgan"
+              placeholder="Your full name"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
             <p className="text-[11px] text-slate-500">
@@ -165,7 +160,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="e.g. alex.morgan@gmail.com"
+              placeholder="you@example.com"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
           </div>
@@ -180,33 +175,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           </button>
         </form>
 
-        {/* Quick Student Preset Badges */}
-        <div className="pt-2 border-t border-slate-800">
-          <p className="text-[11px] text-slate-400 mb-2 font-medium">Quick demo personas:</p>
-          <div className="flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={() => handleQuickPreset('Alex Morgan', 'alex.morgan@stanford.edu')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition-colors cursor-pointer"
-            >
-              Alex Morgan (Stanford)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickPreset('Sophia Chen', 'sophia.chen@mit.edu')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition-colors cursor-pointer"
-            >
-              Sophia Chen (MIT)
-            </button>
-            <button
-              type="button"
-              onClick={() => handleQuickPreset('David Kumar', 'david.kumar@berkeley.edu')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-purple-300 border border-slate-700 transition-colors cursor-pointer"
-            >
-              David Kumar (Berkeley)
-            </button>
-          </div>
-        </div>
 
         <div className="flex items-center justify-center space-x-1.5 text-[11px] text-slate-500">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
