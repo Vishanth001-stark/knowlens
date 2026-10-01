@@ -122,7 +122,7 @@ export const ProfileSettingsView: React.FC<ProfileSettingsViewProps> = ({
               <User className="w-7 h-7" />
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">{profile?.student_name || 'Vishanth R'}</h2>
+              <h2 className="text-xl font-bold text-white">{profile?.student_name || 'Active Student'}</h2>
               <span className="text-xs text-slate-400">Student ID: #{profile?.student_id || 1}</span>
             </div>
           </div>

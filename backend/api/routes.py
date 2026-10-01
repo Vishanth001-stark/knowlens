@@ -760,7 +760,7 @@ def get_student_profile(id: int, db: Session = Depends(get_db)):
     seed_database_if_empty(db)
     student = db.query(Student).filter(Student.id == id).first()
     if not student:
-        student = Student(id=id, name="Vishanth R", email="vishanth@example.com")
+        student = Student(id=id, name=f"Student #{id}", email=f"student{id}@knowlens.edu")
         db.add(student)
         db.commit()
         db.refresh(student)
@@ -1468,7 +1468,7 @@ def load_demo_student(db: Session = Depends(get_db)):
 
     demo_student = db.query(Student).filter(Student.id == 1).first()
     if not demo_student:
-        demo_student = Student(id=1, name="Vishanth R (Demo)", email="vishanth.demo@university.edu")
+        demo_student = Student(id=1, name="Demo Student", email="demo.student@knowlens.edu")
         db.add(demo_student)
         db.commit()
 

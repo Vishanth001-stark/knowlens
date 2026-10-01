@@ -19,8 +19,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   onDirectLogin,
   isLoading,
 }) => {
-  const [name, setName] = useState('Vishanth R');
-  const [email, setEmail] = useState('vishanth@example.com');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -47,10 +47,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const handleGoogleClick = async () => {
     setError(null);
+    const googleEmail = email.trim();
+    const googleName = name.trim();
+    if (!googleEmail || !googleEmail.includes('@')) {
+      setError('Please enter your Google email address below to sign in with Google.');
+      return;
+    }
     try {
-      const googleName = name.trim() || 'Vishanth R';
-      const googleEmail = email.trim() || 'vishanth@gmail.com';
-      await onGoogleLogin(googleName, googleEmail);
+      await onGoogleLogin(googleName || googleEmail.split('@')[0], googleEmail);
       onClose();
     } catch (err: any) {
       setError(err.message || 'Google sign-in failed.');
@@ -143,7 +147,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               required
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Vishanth R"
+              placeholder="e.g. Alex Morgan"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
             <p className="text-[11px] text-slate-500">
@@ -161,7 +165,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="vishanth@example.com"
+              placeholder="e.g. alex.morgan@gmail.com"
               className="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white placeholder-slate-500 text-sm focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all"
             />
           </div>
@@ -178,28 +182,28 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
         {/* Quick Student Preset Badges */}
         <div className="pt-2 border-t border-slate-800">
-          <p className="text-[11px] text-slate-400 mb-2 font-medium">Quick sign-in profiles:</p>
+          <p className="text-[11px] text-slate-400 mb-2 font-medium">Quick demo personas:</p>
           <div className="flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => handleQuickPreset('Vishanth R', 'vishanth@example.com')}
+              onClick={() => handleQuickPreset('Alex Morgan', 'alex.morgan@stanford.edu')}
               className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-slate-700 transition-colors cursor-pointer"
             >
-              Vishanth R (Student)
+              Alex Morgan (Stanford)
             </button>
             <button
               type="button"
-              onClick={() => handleQuickPreset('Alex Chen', 'alex.chen@univ.edu')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors cursor-pointer"
+              onClick={() => handleQuickPreset('Sophia Chen', 'sophia.chen@mit.edu')}
+              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 transition-colors cursor-pointer"
             >
-              Alex Chen
+              Sophia Chen (MIT)
             </button>
             <button
               type="button"
-              onClick={() => handleQuickPreset('Priya Sharma', 'priya.s@tech.edu')}
-              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors cursor-pointer"
+              onClick={() => handleQuickPreset('David Kumar', 'david.kumar@berkeley.edu')}
+              className="px-2.5 py-1 rounded-lg text-xs bg-slate-800 hover:bg-slate-700 text-purple-300 border border-slate-700 transition-colors cursor-pointer"
             >
-              Priya Sharma
+              David Kumar (Berkeley)
             </button>
           </div>
         </div>

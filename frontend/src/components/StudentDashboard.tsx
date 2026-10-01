@@ -60,7 +60,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({
     );
   }
 
-  const displayName = studentUser?.name || profile.student_name || 'Vishanth';
+  const displayName = studentUser?.name || profile?.student_name || 'Learner';
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

@@ -1,6 +1,12 @@
-import React, { useState } from 'react';
-import { Sparkles, User, Mail, ArrowRight, ShieldCheck, BookOpen, Brain, UploadCloud, Compass } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Sparkles, User, Mail, ArrowRight, ShieldCheck, UploadCloud, Compass, Plus, Check, LogIn, X } from 'lucide-react';
 import { StudentUser } from '../types';
+
+interface SavedGoogleAccount {
+  name: string;
+  email: string;
+  avatarUrl?: string;
+}
 
 interface LoginPageProps {
   onGoogleLogin: (name: string, email: string) => Promise<void>;
@@ -19,10 +25,24 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   const [email, setEmail] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Google Account Chooser Modal state
+  const [isGoogleChooserOpen, setIsGoogleChooserOpen] = useState(false);
+  const [googleEmailInput, setGoogleEmailInput] = useState('');
+  const [googleNameInput, setGoogleNameInput] = useState('');
+  const [showAddAccountForm, setShowAddAccountForm] = useState(false);
+  const [savedAccounts, setSavedAccounts] = useState<SavedGoogleAccount[]>(() => {
+    try {
+      const saved = localStorage.getItem('knowlens_saved_google_accounts');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const handleDirectSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim()) {
-      setError('Please enter your name.');
+      setError('Please enter your full name.');
       return;
     }
     if (!email.trim() || !email.includes('@')) {
@@ -37,12 +57,53 @@ export const LoginPage: React.FC<LoginPageProps> = ({
     }
   };
 
-  const handleGoogleClick = async () => {
+  const handleOpenGoogleAuth = () => {
+    setError(null);
+    // If user has saved accounts, show account chooser modal
+    // Otherwise open the new account sign in directly
+    if (savedAccounts.length > 0) {
+      setShowAddAccountForm(false);
+    } else {
+      setShowAddAccountForm(true);
+    }
+    setIsGoogleChooserOpen(true);
+  };
+
+  const handleSelectGoogleAccount = async (account: SavedGoogleAccount) => {
     setError(null);
     try {
-      const googleName = name.trim() || 'Vishanth R';
-      const googleEmail = email.trim() || 'vishanth@gmail.com';
-      await onGoogleLogin(googleName, googleEmail);
+      await onGoogleLogin(account.name, account.email);
+      setIsGoogleChooserOpen(false);
+    } catch (err: any) {
+      setError(err.message || 'Google authentication failed.');
+    }
+  };
+
+  const handleNewGoogleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!googleEmailInput.trim() || !googleEmailInput.includes('@')) {
+      setError('Please enter a valid Google email address.');
+      return;
+    }
+    const cleanEmail = googleEmailInput.trim();
+    const cleanName = googleNameInput.trim() || cleanEmail.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+    // Save to device's Google accounts for quick re-login
+    const updatedAccounts = [
+      { name: cleanName, email: cleanEmail },
+      ...savedAccounts.filter(acc => acc.email.toLowerCase() !== cleanEmail.toLowerCase()),
+    ].slice(0, 5);
+
+    try {
+      localStorage.setItem('knowlens_saved_google_accounts', JSON.stringify(updatedAccounts));
+      setSavedAccounts(updatedAccounts);
+    } catch (e) {
+      console.error(e);
+    }
+
+    try {
+      await onGoogleLogin(cleanName, cleanEmail);
+      setIsGoogleChooserOpen(false);
     } catch (err: any) {
       setError(err.message || 'Google sign-in failed.');
     }
@@ -54,7 +115,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center py-10 px-4">
+    <div className="min-h-[85vh] flex items-center justify-center py-10 px-4">
       <div className="w-full max-w-lg space-y-8">
         {/* Brand Banner */}
         <div className="text-center space-y-3">
@@ -71,7 +132,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </h1>
 
           <p className="text-sm text-slate-400 max-w-md mx-auto leading-relaxed">
-            Enter your details to generate your diagnostic concept graph, upload study notes, and detect root causes of confusion.
+            Diagnose concept bottlenecks, upload course documents, and discover the prerequisite root causes behind mistakes.
           </p>
         </div>
 
@@ -86,7 +147,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           {/* Google Sign In Button */}
           <button
             type="button"
-            onClick={handleGoogleClick}
+            onClick={handleOpenGoogleAuth}
             disabled={isLoading}
             className="w-full py-3.5 px-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-semibold text-sm flex items-center justify-center space-x-3 shadow-lg hover:shadow-xl transition-all cursor-pointer disabled:opacity-60"
           >
@@ -108,7 +169,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            <span>{isLoading ? 'Signing in with Google...' : 'Continue with Google'}</span>
+            <span>{isLoading ? 'Connecting to Google...' : 'Continue with Google'}</span>
           </button>
 
           {/* Divider */}
@@ -121,7 +182,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
 
           {/* Direct Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleDirectSubmit} className="space-y-4">
             <div className="space-y-1.5">
               <label className="text-xs font-semibold text-slate-300 block">
                 Your Full Name
@@ -132,7 +193,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Vishanth R"
+                  placeholder="e.g. Alex Morgan"
                   required
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
@@ -149,7 +210,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="e.g. vishanth@example.com"
+                  placeholder="e.g. alex.morgan@gmail.com"
                   required
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
@@ -166,23 +227,30 @@ export const LoginPage: React.FC<LoginPageProps> = ({
             </button>
           </form>
 
-          {/* Quick Preset Pill */}
+          {/* Quick Demo Personas */}
           <div className="pt-2 border-t border-slate-800/60 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-400">
-            <span>Quick Autofill:</span>
-            <div className="flex gap-2">
+            <span>Demo Personas:</span>
+            <div className="flex flex-wrap gap-1.5">
               <button
                 type="button"
-                onClick={() => handlePreset('Vishanth R', 'vishanth@example.com')}
+                onClick={() => handlePreset('Alex Morgan', 'alex.morgan@stanford.edu')}
                 className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-indigo-300 border border-slate-700/80 transition-colors cursor-pointer"
               >
-                Vishanth R
+                Alex Morgan
               </button>
               <button
                 type="button"
-                onClick={() => handlePreset('Demo Student', 'demo@student.edu')}
-                className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-slate-300 border border-slate-700/80 transition-colors cursor-pointer"
+                onClick={() => handlePreset('Sophia Chen', 'sophia.chen@mit.edu')}
+                className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-cyan-300 border border-slate-700/80 transition-colors cursor-pointer"
               >
-                Demo Student
+                Sophia Chen
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePreset('David Kumar', 'david.kumar@berkeley.edu')}
+                className="px-2.5 py-1 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-purple-300 border border-slate-700/80 transition-colors cursor-pointer"
+              >
+                David Kumar
               </button>
             </div>
           </div>
@@ -203,9 +271,8 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         {/* Educational Features Highlights */}
         <div className="grid grid-cols-3 gap-3 pt-2 text-center text-xs text-slate-400">
           <div className="p-3 rounded-2xl bg-slate-900/40 border border-slate-800/60 flex flex-col items-center space-y-1">
-            <Brain className="w-4 h-4 text-indigo-400" />
             <span className="font-semibold text-slate-200">DAG Tracing</span>
-            <span className="text-[11px] text-slate-500">Root-cause discovery</span>
+            <span className="text-[11px] text-slate-500">Prerequisite discovery</span>
           </div>
           <div className="p-3 rounded-2xl bg-slate-900/40 border border-slate-800/60 flex flex-col items-center space-y-1">
             <UploadCloud className="w-4 h-4 text-cyan-400" />
@@ -219,6 +286,144 @@ export const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Authentic Google Account Selector Modal */}
+      {isGoogleChooserOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md bg-white text-slate-900 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 border border-slate-200">
+            {/* Close button */}
+            <button
+              onClick={() => setIsGoogleChooserOpen(false)}
+              className="absolute top-4 right-4 p-1.5 text-slate-500 hover:text-slate-800 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {/* Google Header */}
+            <div className="text-center space-y-2">
+              <div className="flex justify-center">
+                <svg className="w-9 h-9" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                {showAddAccountForm ? 'Sign in with Google' : 'Choose an account'}
+              </h3>
+              <p className="text-xs text-slate-600">
+                to continue to <strong className="text-indigo-600">KnowLens</strong>
+              </p>
+            </div>
+
+            {/* Account List (if user has accounts and not adding new) */}
+            {!showAddAccountForm && (
+              <div className="space-y-2">
+                <div className="divide-y divide-slate-100 border-y border-slate-100 max-h-60 overflow-y-auto">
+                  {savedAccounts.map((acc, i) => (
+                    <button
+                      key={i}
+                      onClick={() => handleSelectGoogleAccount(acc)}
+                      disabled={isLoading}
+                      className="w-full py-3 px-2 flex items-center space-x-3 text-left hover:bg-slate-50 transition-colors rounded-lg cursor-pointer"
+                    >
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-sm">
+                        {acc.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-medium text-slate-900 truncate">{acc.name}</div>
+                        <div className="text-xs text-slate-500 truncate">{acc.email}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Option to use another account */}
+                <button
+                  type="button"
+                  onClick={() => setShowAddAccountForm(true)}
+                  className="w-full py-3 px-2 flex items-center space-x-3 text-left hover:bg-slate-50 transition-colors rounded-lg text-slate-700 cursor-pointer"
+                >
+                  <div className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 shrink-0 border border-slate-200">
+                    <Plus className="w-4 h-4" />
+                  </div>
+                  <span className="text-sm font-medium text-slate-800">Use another account</span>
+                </button>
+              </div>
+            )}
+
+            {/* Add New Account Form */}
+            {showAddAccountForm && (
+              <form onSubmit={handleNewGoogleSubmit} className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 block">
+                    Google Email
+                  </label>
+                  <input
+                    type="email"
+                    value={googleEmailInput}
+                    onChange={(e) => setGoogleEmailInput(e.target.value)}
+                    placeholder="Enter your Gmail address"
+                    required
+                    autoFocus
+                    className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-semibold text-slate-700 block">
+                    Your Name (as displayed on Google)
+                  </label>
+                  <input
+                    type="text"
+                    value={googleNameInput}
+                    onChange={(e) => setGoogleNameInput(e.target.value)}
+                    placeholder="e.g. John Doe"
+                    className="w-full border border-slate-300 rounded-lg px-3.5 py-2.5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between pt-2">
+                  {savedAccounts.length > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => setShowAddAccountForm(false)}
+                      className="text-xs text-blue-600 hover:underline font-medium cursor-pointer"
+                    >
+                      ← Back to accounts
+                    </button>
+                  ) : <div />}
+
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {isLoading ? 'Verifying...' : 'Next'}
+                  </button>
+                </div>
+              </form>
+            )}
+
+            <div className="text-[11px] text-slate-400 text-center pt-2 border-t border-slate-100">
+              To continue, Google will share your name, email address, and profile with KnowLens.
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
