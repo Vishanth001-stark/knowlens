@@ -48,5 +48,103 @@
     "misconception_distractors": {
       "WHERE can use aggregate functions like COUNT(), while HAVING cannot.": "inverting_where_and_having_aggregation_roles"
     }
+  },
+  {
+    "id": 703,
+    "topic": "Transactions",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "Which ACID property guarantees that once a transaction commits, its modifications are permanently preserved even during power outages or system crashes?",
+    "code_snippet": null,
+    "options": [
+      "Durability",
+      "Atomicity",
+      "Consistency",
+      "Isolation"
+    ],
+    "correct_answer": "Durability",
+    "explanation": "Durability guarantees that committed transactions survive subsequent crashes, usually recorded through write-ahead logging (WAL).",
+    "concepts": [
+      "db_transactions_acid"
+    ],
+    "prerequisites": [
+      "db_relational_model"
+    ],
+    "misconception_distractors": {
+      "Atomicity": "confusing_all_or_nothing_atomicity_with_permanent_storage_durability"
+    }
+  },
+  {
+    "id": 704,
+    "topic": "Relational Concepts",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "What is the primary role of a Foreign Key constraint in a relational database?",
+    "code_snippet": null,
+    "options": [
+      "Enforce referential integrity by ensuring referenced values exist in the parent table",
+      "Encrypt sensitive data transmitted over the network",
+      "Accelerate text searches across large columns",
+      "Guarantee every row in the child table is globally unique"
+    ],
+    "correct_answer": "Enforce referential integrity by ensuring referenced values exist in the parent table",
+    "explanation": "Foreign keys maintain referential integrity, ensuring that a record cannot reference a nonexistent entity in the referenced table.",
+    "concepts": [
+      "db_relational_model"
+    ],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "Guarantee every row in the child table is globally unique": "confusing_foreign_key_with_primary_key_uniqueness"
+    }
+  },
+  {
+    "id": 705,
+    "topic": "Indexing",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "Why is a B-Tree index preferred over a Hash index for SQL queries with range predicates (e.g. BETWEEN 10 AND 50)?",
+    "code_snippet": null,
+    "options": [
+      "B-Tree leaf nodes maintain sorted key order and pointers, allowing sequential interval scans",
+      "Hash indexes cannot store integers",
+      "B-Tree indexes take zero storage space on disk",
+      "Hash indexes only support read-only databases"
+    ],
+    "correct_answer": "B-Tree leaf nodes maintain sorted key order and pointers, allowing sequential interval scans",
+    "explanation": "B-Tree leaf pages are ordered and linked, enabling fast range traversals. Hash functions distribute values uniformly, destroying order.",
+    "concepts": [
+      "db_indexes"
+    ],
+    "prerequisites": [
+      "db_relational_model"
+    ],
+    "misconception_distractors": {
+      "Hash indexes cannot store integers": "unfounded_type_limitation_misconception"
+    }
+  },
+  {
+    "id": 706,
+    "topic": "Schema Design",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "A table in 2NF contains dependencies: StudentID -> DepartmentID, and DepartmentID -> DepartmentBuilding. Which normal form is violated by StudentID transitively determining DepartmentBuilding?",
+    "code_snippet": null,
+    "options": [
+      "Third Normal Form (3NF)",
+      "First Normal Form (1NF)",
+      "Second Normal Form (2NF)",
+      "Boyce-Codd Normal Form only"
+    ],
+    "correct_answer": "Third Normal Form (3NF)",
+    "explanation": "Third Normal Form (3NF) strictly prohibits transitive functional dependencies among non-prime attributes.",
+    "concepts": [
+      "db_normalization"
+    ],
+    "prerequisites": [
+      "db_relational_model"
+    ],
+    "misconception_distractors": {
+      "Second Normal Form (2NF)": "confusing_transitive_dependency_with_partial_key_dependency"
+    }
   }
 ]

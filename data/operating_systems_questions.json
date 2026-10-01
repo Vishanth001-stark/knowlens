@@ -46,5 +46,103 @@
     "misconception_distractors": {
       "Eliminate ALL four Coffman conditions simultaneously.": "believing_all_deadlock_conditions_must_be_broken_simultaneously"
     }
+  },
+  {
+    "id": 603,
+    "topic": "Memory Management",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "In a virtual memory system with paging, what happens when a page fault occurs?",
+    "code_snippet": null,
+    "options": [
+      "The referenced page is loaded from secondary storage into physical RAM",
+      "The operating system terminates the process immediately",
+      "The CPU switches to hyperthreading mode",
+      "A context switch to another core is forced"
+    ],
+    "correct_answer": "The referenced page is loaded from secondary storage into physical RAM",
+    "explanation": "A page fault is an interrupt raised by the memory management unit (MMU) when a program accesses a valid virtual page that is not currently resident in physical RAM. The OS loads the required page from disk.",
+    "concepts": [
+      "os_virtual_memory"
+    ],
+    "prerequisites": [
+      "os_processes_threads"
+    ],
+    "misconception_distractors": {
+      "The operating system terminates the process immediately": "confusing_page_fault_with_fatal_segmentation_fault"
+    }
+  },
+  {
+    "id": 604,
+    "topic": "CPU Scheduling",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "Which CPU scheduling algorithm can lead to starvation for processes with long burst times?",
+    "code_snippet": null,
+    "options": [
+      "Shortest Job First (SJF)",
+      "Round Robin (RR)",
+      "First-Come, First-Served (FCFS)",
+      "Lottery Scheduling"
+    ],
+    "correct_answer": "Shortest Job First (SJF)",
+    "explanation": "Shortest Job First (SJF) always gives precedence to processes with the shortest remaining burst time. If short processes arrive continuously, longer processes may wait indefinitely (starvation).",
+    "concepts": [
+      "os_cpu_scheduling"
+    ],
+    "prerequisites": [
+      "os_processes_threads"
+    ],
+    "misconception_distractors": {
+      "Round Robin (RR)": "confusing_time_sliced_round_robin_with_priority_starvation"
+    }
+  },
+  {
+    "id": 605,
+    "topic": "Synchronization",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "What is the primary purpose of a mutual exclusion lock (mutex)?",
+    "code_snippet": null,
+    "options": [
+      "Preventing more than one thread from executing in a critical section concurrently",
+      "Allowing multiple threads to read and write shared data without synchronization",
+      "Speeding up CPU instruction caching across cores",
+      "Preventing page replacement in virtual memory"
+    ],
+    "correct_answer": "Preventing more than one thread from executing in a critical section concurrently",
+    "explanation": "A mutex guarantees mutual exclusion: only one thread can acquire the lock and execute the protected critical section at any given time, preventing data races.",
+    "concepts": [
+      "os_synchronization"
+    ],
+    "prerequisites": [
+      "os_processes_threads"
+    ],
+    "misconception_distractors": {
+      "Allowing multiple threads to read and write shared data without synchronization": "confusing_locking_with_uncontrolled_parallel_access"
+    }
+  },
+  {
+    "id": 606,
+    "topic": "Concurrency",
+    "difficulty": "hard",
+    "question_type": "mcq",
+    "question": "Why is a thread context switch within the same process generally faster than a full process context switch?",
+    "code_snippet": null,
+    "options": [
+      "Threads share the same virtual memory space, so page tables and TLB entries do not need to be flushed",
+      "Threads do not require saving CPU registers",
+      "Thread switching is handled exclusively by hardware without OS intervention",
+      "Threads have no execution stack"
+    ],
+    "correct_answer": "Threads share the same virtual memory space, so page tables and TLB entries do not need to be flushed",
+    "explanation": "Because threads within the same process share identical virtual memory mappings (page tables), a thread switch avoids invalidating the Translation Lookaside Buffer (TLB), greatly reducing memory cache misses.",
+    "concepts": [
+      "os_processes_threads"
+    ],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "Threads do not require saving CPU registers": "believing_threads_share_cpu_register_state"
+    }
   }
 ]

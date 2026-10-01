@@ -49,5 +49,101 @@
     "misconception_distractors": {
       "O(1)": "assuming_hash_table_lookup_is_strictly_o1_in_all_cases"
     }
+  },
+  {
+    "id": 403,
+    "topic": "Linear Structures",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "When inserting a new node at the head of a singly linked list, which sequence of pointer operations correctly avoids orphaning the list?",
+    "code_snippet": null,
+    "options": [
+      "new_node->next = head; head = new_node;",
+      "head = new_node; new_node->next = head;",
+      "head->next = new_node; new_node = head;",
+      "new_node->next = head->next; head = new_node;"
+    ],
+    "correct_answer": "new_node->next = head; head = new_node;",
+    "explanation": "To preserve the existing list nodes, new_node->next must point to the current head before updating the head reference to point to new_node.",
+    "concepts": [
+      "ds_linked_lists"
+    ],
+    "prerequisites": [
+      "ds_arrays"
+    ],
+    "misconception_distractors": {
+      "head = new_node; new_node->next = head;": "orphaning_linked_list_nodes_by_overwriting_head_first"
+    }
+  },
+  {
+    "id": 404,
+    "topic": "Linear Structures",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "Which principle governs the order of element removal in a Queue versus a Stack?",
+    "code_snippet": null,
+    "options": [
+      "Queue is FIFO (First-In, First-Out); Stack is LIFO (Last-In, First-Out)",
+      "Queue is LIFO; Stack is FIFO",
+      "Both are FIFO",
+      "Both are LIFO"
+    ],
+    "correct_answer": "Queue is FIFO (First-In, First-Out); Stack is LIFO (Last-In, First-Out)",
+    "explanation": "Queues process items in arrival order (FIFO), whereas Stacks retrieve the most recently pushed item first (LIFO).",
+    "concepts": [
+      "ds_stacks_queues"
+    ],
+    "prerequisites": [
+      "ds_arrays"
+    ],
+    "misconception_distractors": {
+      "Queue is LIFO; Stack is FIFO": "transposing_queue_and_stack_removal_invariants"
+    }
+  },
+  {
+    "id": 405,
+    "topic": "Hierarchical Structures",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "What is the maximum number of nodes in a binary tree of height H (where a single root node has height 0)?",
+    "code_snippet": null,
+    "options": [
+      "2^(H + 1) - 1",
+      "2^H",
+      "2*H",
+      "H^2"
+    ],
+    "correct_answer": "2^(H + 1) - 1",
+    "explanation": "A full binary tree has 2^0 + 2^1 + 2^2 + ... + 2^H = 2^(H+1) - 1 total nodes.",
+    "concepts": [
+      "ds_trees"
+    ],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "2^H": "confusing_nodes_at_deepest_level_with_total_tree_nodes"
+    }
+  },
+  {
+    "id": 406,
+    "topic": "Linear Structures",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "Why does accessing an element by index in a contiguous array execute in O(1) constant time?",
+    "code_snippet": null,
+    "options": [
+      "The memory address is directly calculated via base_address + index * element_size",
+      "Arrays use binary search internally to find indices",
+      "CPU registers load all array values simultaneously",
+      "Array indices are stored in a hash table"
+    ],
+    "correct_answer": "The memory address is directly calculated via base_address + index * element_size",
+    "explanation": "Contiguous memory layout allows random access through a single direct memory offset calculation in constant time O(1).",
+    "concepts": [
+      "ds_arrays"
+    ],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "Arrays use binary search internally to find indices": "confusing_value_search_with_index_address_calculation"
+    }
   }
 ]

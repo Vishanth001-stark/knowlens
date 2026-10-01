@@ -48,5 +48,103 @@
     "misconception_distractors": {
       "192.168.1.64 to 192.168.1.127": "including_network_and_broadcast_addresses_as_usable_hosts"
     }
+  },
+  {
+    "id": 503,
+    "topic": "Transport Layer",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "Which fundamental property distinguishes UDP from TCP at the Transport Layer?",
+    "code_snippet": null,
+    "options": [
+      "UDP is connectionless and does not guarantee in-order delivery or retransmission",
+      "UDP is connection-oriented requiring a 3-way handshake",
+      "UDP encrypts packet payloads automatically",
+      "UDP is restricted solely to fiber optic media"
+    ],
+    "correct_answer": "UDP is connectionless and does not guarantee in-order delivery or retransmission",
+    "explanation": "UDP provides minimal, connectionless best-effort transport without acknowledging receipts or retransmitting dropped packets.",
+    "concepts": [
+      "cn_tcp_udp"
+    ],
+    "prerequisites": [
+      "cn_osi_model"
+    ],
+    "misconception_distractors": {
+      "UDP is connection-oriented requiring a 3-way handshake": "attributing_tcp_handshake_to_udp"
+    }
+  },
+  {
+    "id": 504,
+    "topic": "Transport Layer",
+    "difficulty": "medium",
+    "question_type": "mcq",
+    "question": "What is the standard message exchange sequence during a TCP connection establishment?",
+    "code_snippet": null,
+    "options": [
+      "SYN -> SYN-ACK -> ACK",
+      "ACK -> SYN -> SYN-ACK",
+      "SYN -> ACK -> DATA",
+      "CONNECT -> ACCEPT -> READY"
+    ],
+    "correct_answer": "SYN -> SYN-ACK -> ACK",
+    "explanation": "TCP uses a three-way handshake: the client sends SYN, the server replies with SYN-ACK, and the client confirms with ACK.",
+    "concepts": [
+      "cn_three_way_handshake"
+    ],
+    "prerequisites": [
+      "cn_tcp_udp"
+    ],
+    "misconception_distractors": {
+      "ACK -> SYN -> SYN-ACK": "inverting_handshake_synchronization_order"
+    }
+  },
+  {
+    "id": 505,
+    "topic": "OSI Architecture",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "At which layer of the OSI model do network Routers primarily operate to forward packets between different subnets?",
+    "code_snippet": null,
+    "options": [
+      "Network Layer (Layer 3)",
+      "Data Link Layer (Layer 2)",
+      "Transport Layer (Layer 4)",
+      "Physical Layer (Layer 1)"
+    ],
+    "correct_answer": "Network Layer (Layer 3)",
+    "explanation": "Routers operate at Layer 3 (Network Layer), inspecting logical destination IP addresses to make packet forwarding decisions.",
+    "concepts": [
+      "cn_osi_model"
+    ],
+    "prerequisites": [],
+    "misconception_distractors": {
+      "Data Link Layer (Layer 2)": "confusing_l3_routers_with_l2_ethernet_switches"
+    }
+  },
+  {
+    "id": 506,
+    "topic": "Application Layer",
+    "difficulty": "easy",
+    "question_type": "mcq",
+    "question": "What is the primary function of the Domain Name System (DNS)?",
+    "code_snippet": null,
+    "options": [
+      "Resolve human-readable domain names into numerical IP addresses",
+      "Encrypt web browser sessions with SSL/TLS certificates",
+      "Assign dynamic private IP addresses to home devices",
+      "Route Ethernet frames between local MAC addresses"
+    ],
+    "correct_answer": "Resolve human-readable domain names into numerical IP addresses",
+    "explanation": "DNS translates domain names (such as knowlens.edu) into IP addresses that routers and hosts use to communicate.",
+    "concepts": [
+      "cn_dns_http"
+    ],
+    "prerequisites": [
+      "cn_ip_addressing"
+    ],
+    "misconception_distractors": {
+      "Assign dynamic private IP addresses to home devices": "confusing_dns_name_resolution_with_dhcp_lease_allocation"
+    }
   }
 ]
