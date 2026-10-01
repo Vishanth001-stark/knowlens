@@ -55,6 +55,7 @@ class DocumentAnalysisResponse(BaseModel):
     file_type: str
     file_size: int
     detected_subject: str
+    detected_subject_code: Optional[str] = None
     extracted_concepts: List[str]
     confusion_hotspots: List[DocumentHotspot]
     question_count: int

@@ -346,6 +346,7 @@ export interface DocumentAnalysis {
   file_type: string;
   file_size: number;
   detected_subject: string;
+  detected_subject_code?: string;
   extracted_concepts: string[];
   confusion_hotspots: DocumentHotspot[];
   question_count: number;

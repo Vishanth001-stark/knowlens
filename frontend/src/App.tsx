@@ -178,19 +178,83 @@ export function App() {
     const studentId = studentUser?.id || 1;
     setIsUploadingDoc(true);
     try {
-      const doc = await api.uploadDocument(file, studentId, activeSubjectCode);
+      // Analyze document by content and filename without forcing activeSubjectCode
+      const doc = await api.uploadDocument(file, studentId);
       setActiveDocAnalysis(doc);
+      if (doc.detected_subject_code) {
+        setActiveSubjectCode(doc.detected_subject_code);
+      }
       setIsDocModalOpen(true);
       await loadStudentDocuments(studentId);
     } catch (err: any) {
       console.warn('Backend document upload error, activating resilient client diagnosis:', err);
       const filename = file.name || 'uploaded_document.pdf';
       const ext = filename.split('.').pop()?.toLowerCase() || 'pdf';
-      const subjectName = activeSubjectCode === 'c_programming' ? 'C Programming' :
-        activeSubjectCode === 'python' ? 'Python' :
-        activeSubjectCode === 'operating_systems' ? 'Operating Systems' :
-        activeSubjectCode === 'data_structures' ? 'Data Structures' :
-        activeSubjectCode === 'database_systems' ? 'Database Systems' : 'Computer Science';
+      const fnameLower = filename.toLowerCase();
+
+      let detectedCode = 'c_programming';
+      let subjectName = 'C Programming';
+      let extracted = ['memory_addresses', 'dereferencing', 'pointer_arithmetic'];
+      let hotspots = [
+        {
+          concept: 'Pointer Arithmetic & Stride',
+          risk_level: 'high' as const,
+          potential_confusion: 'Misinterpreting memory address strides versus byte indices.',
+          prerequisite_bottleneck: 'Memory Addresses',
+          remedy_suggestion: 'Review hardware address layout and byte representations before complex arithmetic.',
+        },
+        {
+          concept: 'Dereferencing (*ptr)',
+          risk_level: 'medium' as const,
+          potential_confusion: 'Confusing direct value modification with address reference redirection.',
+          prerequisite_bottleneck: 'Variables & Scope',
+          remedy_suggestion: 'Trace pointer variables step-by-step with memory diagram models.',
+        }
+      ];
+
+      if (fnameLower.includes('math') || fnameLower.includes('calc') || fnameLower.includes('algebra') || fnameLower.includes('prob') || fnameLower.includes('deriv') || fnameLower.includes('integral')) {
+        detectedCode = 'mathematics';
+        subjectName = 'Mathematics';
+        extracted = ['math_limits', 'math_derivatives', 'math_chain_rule'];
+        hotspots = [
+          {
+            concept: 'Calculus Derivatives & Rate of Change',
+            risk_level: 'high' as const,
+            potential_confusion: "Confusing the slope of the tangent line f'(x) with average rate of change or function value f(x).",
+            prerequisite_bottleneck: 'Limits & Continuity',
+            remedy_suggestion: 'Review the limit definition of difference quotients before applying power rules.',
+          },
+          {
+            concept: 'Chain Rule for Composite Functions',
+            risk_level: 'medium' as const,
+            potential_confusion: "Omitting multiplication by the inner derivative g'(x) when differentiating composite f(g(x)).",
+            prerequisite_bottleneck: 'Derivatives & Rate of Change',
+            remedy_suggestion: 'Decompose into inner u = g(x) and outer y = f(u) explicitly.',
+          }
+        ];
+      } else if (fnameLower.includes('python') || fnameLower.includes('py')) {
+        detectedCode = 'python';
+        subjectName = 'Python';
+        extracted = ['py_variables', 'py_mutability', 'py_scope_legb'];
+      } else if (fnameLower.includes('os') || fnameLower.includes('deadlock') || fnameLower.includes('thread') || fnameLower.includes('process')) {
+        detectedCode = 'operating_systems';
+        subjectName = 'Operating Systems';
+        extracted = ['os_processes_threads', 'os_deadlocks', 'os_virtual_memory'];
+      } else if (fnameLower.includes('net') || fnameLower.includes('tcp') || fnameLower.includes('udp') || fnameLower.includes('ip') || fnameLower.includes('osi')) {
+        detectedCode = 'computer_networks';
+        subjectName = 'Computer Networks';
+        extracted = ['cn_osi_model', 'cn_tcp_udp', 'cn_three_way_handshake'];
+      } else if (fnameLower.includes('db') || fnameLower.includes('sql') || fnameLower.includes('normal') || fnameLower.includes('relat')) {
+        detectedCode = 'database_systems';
+        subjectName = 'Database Systems';
+        extracted = ['db_relational_model', 'db_normalization', 'db_transactions_acid'];
+      } else if (fnameLower.includes('tree') || fnameLower.includes('list') || fnameLower.includes('stack') || fnameLower.includes('queue') || fnameLower.includes('ds') || fnameLower.includes('algo')) {
+        detectedCode = 'data_structures';
+        subjectName = 'Data Structures';
+        extracted = ['ds_arrays', 'ds_linked_lists', 'ds_bst'];
+      }
+
+      setActiveSubjectCode(detectedCode);
 
       const fallbackAnalysis: DocumentAnalysis = {
         id: Date.now(),
@@ -198,23 +262,9 @@ export function App() {
         file_type: ext,
         file_size: file.size || 1024,
         detected_subject: subjectName,
-        extracted_concepts: ['memory_addresses', 'dereferencing', 'pointer_arithmetic'],
-        confusion_hotspots: [
-          {
-            concept: 'Concept Scaling & Offset',
-            risk_level: 'high',
-            potential_confusion: 'Misinterpreting memory address strides versus byte indices.',
-            prerequisite_bottleneck: 'Memory Addresses',
-            remedy_suggestion: 'Review hardware address layout and byte representations before complex arithmetic.',
-          },
-          {
-            concept: 'State Mutability & References',
-            risk_level: 'medium',
-            potential_confusion: 'Confusing direct value modification with reference redirection.',
-            prerequisite_bottleneck: 'Variables & Scope',
-            remedy_suggestion: 'Trace pointer variables step-by-step with memory diagram models.',
-          }
-        ],
+        detected_subject_code: detectedCode,
+        extracted_concepts: extracted,
+        confusion_hotspots: hotspots,
         question_count: 5,
         created_at: new Date().toISOString(),
       };
@@ -228,6 +278,9 @@ export function App() {
 
   const handleStartDocDiagnostic = async (docId: number) => {
     const studentId = studentUser?.id || 1;
+    if (activeDocAnalysis?.detected_subject_code) {
+      setActiveSubjectCode(activeDocAnalysis.detected_subject_code);
+    }
     try {
       const res = await api.startDocumentDiagnostic(docId, studentId);
       setCustomDiagnosticSessionId(res.session_id);
